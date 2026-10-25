@@ -193,6 +193,128 @@
 
       </div>
 
+      <!-- ═══ INTERACTIVE API ARCHITECTURE LAB ════════════════════════ -->
+      <div class="api-lab-section animate-fade">
+        <div class="api-lab-card">
+          <div class="api-lab-header">
+            <div class="api-lab-tag font-mono">// LIVE SYSTEMS &amp; BACKEND TELEMETRY</div>
+            <h2 class="api-lab-title">What is an API? Interactive Data-Flow Simulator</h2>
+            <p class="api-lab-desc">
+              An <strong>API (Application Programming Interface)</strong> is the digital messenger connecting user interfaces to backend logic and databases. Click any HTTP route below to dispatch simulated data packets and watch the full request-response lifecycle in real-time.
+            </p>
+          </div>
+
+          <!-- 3-Node Architecture Diagram -->
+          <div class="api-diagram">
+            <!-- Node 1: Client -->
+            <div class="api-node client" id="api-node-client">
+              <div class="api-node-icon">
+                <i data-lucide="laptop"></i>
+              </div>
+              <span class="api-node-name">CLIENT APP</span>
+              <span class="api-node-sub font-mono">React / Mobile UI</span>
+              <span class="api-node-state font-mono">PORT 3000</span>
+            </div>
+
+            <!-- Wire 1: HTTP / REST -->
+            <div class="api-wire">
+              <div class="api-wire-line">
+                <div class="api-packet-pulse" id="api-packet-pulse-1"></div>
+              </div>
+              <span class="api-wire-label font-mono">HTTP/2 (REST / JSON)</span>
+            </div>
+
+            <!-- Node 2: API Gateway -->
+            <div class="api-node gateway" id="api-node-gateway">
+              <div class="api-node-icon">
+                <i data-lucide="server"></i>
+              </div>
+              <span class="api-node-name">API GATEWAY</span>
+              <span class="api-node-sub font-mono">Node.js / FastAPI</span>
+              <span class="api-node-state font-mono">ROUTER ENGINE</span>
+            </div>
+
+            <!-- Wire 2: SQL / TCP -->
+            <div class="api-wire">
+              <div class="api-wire-line">
+                <div class="api-packet-pulse pulse-violet" id="api-packet-pulse-2"></div>
+              </div>
+              <span class="api-wire-label font-mono">SQL / POOL CONNECTION</span>
+            </div>
+
+            <!-- Node 3: Database & Cache -->
+            <div class="api-node database" id="api-node-db">
+              <div class="api-node-icon">
+                <i data-lucide="database"></i>
+              </div>
+              <span class="api-node-name">DATA STORE</span>
+              <span class="api-node-sub font-mono">PostgreSQL &amp; Redis</span>
+              <span class="api-node-state font-mono">INDEXED (NVMe)</span>
+            </div>
+          </div>
+
+          <!-- Action Buttons / Endpoint Triggers -->
+          <div class="api-actions-toolbar">
+            <span class="font-mono" style="font-size: 0.72rem; color: var(--text-muted); margin-right: 4px;">DISPATCH ROUTE:</span>
+            <button type="button" class="api-action-pill active" data-endpoint="health">
+              <span class="pill-verb get">GET</span>
+              <span>/api/v1/system/health</span>
+            </button>
+            <button type="button" class="api-action-pill" data-endpoint="telemetry">
+              <span class="pill-verb post">POST</span>
+              <span>/api/v1/robotics/telemetry</span>
+            </button>
+            <button type="button" class="api-action-pill" data-endpoint="database">
+              <span class="pill-verb get">GET</span>
+              <span>/api/v1/users/profile</span>
+            </button>
+            <button type="button" class="api-action-pill" data-endpoint="auth">
+              <span class="pill-verb post">POST</span>
+              <span>/api/v1/auth/jwt-handshake</span>
+            </button>
+          </div>
+
+          <!-- Live Telemetry Inspector Window -->
+          <div class="api-inspector font-mono">
+            <div class="api-inspector-header">
+              <div class="api-inspector-route">
+                <span class="api-method-pill get" id="api-method-badge">GET</span>
+                <span class="api-path-label" id="api-path-text">/api/v1/system/health</span>
+              </div>
+              <div class="api-inspector-metrics">
+                <span class="api-latency-badge font-mono">LATENCY: <strong id="api-latency-val">3.8ms</strong></span>
+                <span class="api-status-badge success font-mono" id="api-status-badge">200 OK</span>
+              </div>
+            </div>
+
+            <div class="api-inspector-body">
+              <!-- Plain-English Concept Explanation -->
+              <div class="api-explanation-box">
+                <div>
+                  <div class="api-expl-title font-mono">// WHAT JUST HAPPENED?</div>
+                  <p class="api-expl-text" id="api-desc-text">
+                    The client requests server operational metrics. The API checks host CPU &amp; memory, returning status in real-time.
+                  </p>
+                </div>
+                <div class="api-concept-callout">
+                  <strong>Why APIs Matter:</strong> Instead of loading an entire new page, the frontend seamlessly exchanges lightweight JSON packets behind the scenes—enabling ultra-fast, app-like experiences.
+                </div>
+              </div>
+
+              <!-- JSON Payload Viewer -->
+              <div class="api-json-box">
+                <pre class="api-json-pre" id="api-json-output"><span class="json-key">"status"</span>: <span class="json-string">"healthy"</span>,
+<span class="json-key">"uptime"</span>: <span class="json-string">"99.98%"</span>,
+<span class="json-key">"cluster"</span>: <span class="json-string">"axiom-edge-node-01"</span>,
+<span class="json-key">"kernel"</span>: <span class="json-string">"v2.6-hardened"</span>,
+<span class="json-key">"memory_usage_mb"</span>: <span class="json-number">48.2</span></pre>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </section>
   </main>
 
@@ -218,6 +340,7 @@
 
   <script src="ultra-nav.js"></script>
   <script src="audio-engine.js"></script>
+  <script src="api-lab.js"></script>
   <script src="app_v3.js"></script>
 </body>
 </html>
