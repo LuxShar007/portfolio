@@ -3493,6 +3493,24 @@ html {
   }
 }
 
+/* ==========================================================================
+   INTERACTIVE SOUND-REACTIVE WATER PARTICLES CANVAS
+   Hydro-kinetic droplets & acoustic cymatics; active only when audio is playing
+   ========================================================================== */
+
+#water-particles-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1; /* directly above background canvas (z:0), beneath interactive UI (z:10+) */
+  pointer-events: none;
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+
+
 
 
 
