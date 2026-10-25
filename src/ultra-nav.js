@@ -61,7 +61,9 @@
     }
 
     initAudioElement() {
-      this.audio = new Audio(this.audioSrc);
+      this.audio = new Audio();
+      this.audio.crossOrigin = 'anonymous';
+      this.audio.src = this.audioSrc;
       this.audio.preload = 'auto';
       this.audio.loop = true;
 
@@ -88,7 +90,8 @@
         if (!AudioContext) return;
         this.ctx = new AudioContext();
         this.analyser = this.ctx.createAnalyser();
-        this.analyser.fftSize = 64;
+        this.analyser.fftSize = 256;
+        this.analyser.smoothingTimeConstant = 0.15; // Lightning-fast transient kick punch for beat detection
         this.source = this.ctx.createMediaElementSource(this.audio);
         this.source.connect(this.analyser);
         this.analyser.connect(this.ctx.destination);

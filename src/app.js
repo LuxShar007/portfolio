@@ -267,9 +267,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const hiddenInput = document.getElementById('terminal-hidden-input');
 
   if (terminalWindow && terminalOutput && terminalInputText && hiddenInput) {
-    // Focus hidden input on terminal click and toggle active borders
+    // Focus hidden input on terminal click and toggle active borders without scrolling
     terminalWindow.addEventListener('click', () => {
-      hiddenInput.focus();
+      hiddenInput.focus({ preventScroll: true });
       if (terminalLogWrapper) terminalLogWrapper.classList.add('focused');
     });
 
@@ -277,9 +277,13 @@ document.addEventListener('DOMContentLoaded', () => {
       if (terminalLogWrapper) terminalLogWrapper.classList.remove('focused');
     });
 
-    // Update screen text as user types
+    // Update screen text as user types without resetting scroll
     hiddenInput.addEventListener('input', (e) => {
       terminalInputText.textContent = e.target.value;
+      const bodyContainer = terminalOutput.parentElement;
+      if (bodyContainer) {
+        bodyContainer.scrollTop = bodyContainer.scrollHeight;
+      }
     });
 
     // Command submission

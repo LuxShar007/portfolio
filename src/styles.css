@@ -1262,12 +1262,18 @@ button, input, textarea {
 }
 
 .hidden-input {
-  position: absolute;
-  top: -100px;
-  left: -100px;
+  position: fixed;
+  top: 0;
+  left: 0;
   opacity: 0;
   width: 1px;
   height: 1px;
+  pointer-events: none;
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  z-index: -9999;
 }
 
 /* ==========================================================================
