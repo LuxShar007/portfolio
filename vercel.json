@@ -1,0 +1,43 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/", "destination": "/src/index.html" },
+    { "source": "/assets/(.*)", "destination": "/assets/$1" },
+    { "source": "/media/(.*)", "destination": "/assets/media/$1" },
+    { "source": "/about", "destination": "/src/about.html" },
+    { "source": "/expertise", "destination": "/src/expertise.html" },
+    { "source": "/milestones", "destination": "/src/milestones.html" },
+    { "source": "/projects", "destination": "/src/projects.html" },
+    { "source": "/connect", "destination": "/src/connect.html" },
+    { "source": "/(.*)\\.html", "destination": "/src/$1.html" },
+    { "source": "/(.*)\\.(js|css|svg|png|jpg|jpeg|webp|mp4|webm|mp3|otf|ttf|woff|woff2)", "destination": "/src/$1.$2" }
+  ],
+  "headers": [
+    {
+      "source": "/assets/media/video/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" },
+        { "key": "Accept-Ranges", "value": "bytes" }
+      ]
+    },
+    {
+      "source": "/assets/media/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/assets/FONT/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    },
+    {
+      "source": "/(.*)\\.(js|css)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }
+      ]
+    }
+  ]
+}

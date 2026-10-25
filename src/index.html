@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sharvin Mhatre | Portfolio</title>
+  <meta name="description" content="Portfolio of Sharvin Mhatre — Dedicated Robotics Enthusiast & Full Stack Web Developer.">
+  
+  <!-- SEO Open Graph -->
+  <meta property="og:title" content="Sharvin Mhatre | Dedicated Robotics Enthusiast">
+  <meta property="og:description" content="Portfolio of Sharvin Mhatre — Dedicated Robotics Enthusiast and Full Stack Web Developer.">
+  <meta property="og:type" content="website">
+  
+  <!-- Apple SF Pro Font CDN -->
+  <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/sf-pro-display">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <!-- Custom Magnetic Cursor -->
+  <div class="custom-cursor" id="custom-cursor"></div>
+  <div class="custom-cursor-dot" id="custom-cursor-dot"></div>
+
+  <!-- ╔═════════════════════════════════════════════════════════════════╗
+       ║  4-VIDEO SHOWCASE NORMAL SCROLL CONTAINER                       ║
+       ║  Slide-up popup animation on scroll down for more content       ║
+       ╚═════════════════════════════════════════════════════════════════╝ -->
+  <main class="showcase-scroll-container" id="showcase-container">
+
+    <!-- POSITION 1: Sharvin Mhatre (Website 1) -->
+    <section class="showcase-section" id="pos-1">
+      <div class="showcase-video-card slide-up-reveal">
+        <video 
+          class="showcase-video" 
+          src="/assets/media/video/Website_1.mp4?v=2" 
+          autoplay 
+          loop 
+          muted 
+          playsinline 
+          preload="auto">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+
+      <!-- Minimal Scroll Down Indicator -->
+      <div class="showcase-scroll-cue">
+        <span class="cue-label">SCROLL</span>
+        <span class="cue-arrow">↓</span>
+      </div>
+    </section>
+
+    <!-- POSITION 2: Dedicated Robotics Enthusiast (Website 2) -->
+    <section class="showcase-section" id="pos-2">
+      <div class="showcase-video-card slide-up-reveal">
+        <video 
+          class="showcase-video" 
+          src="/assets/media/video/Website_2.mp4" 
+          autoplay 
+          loop 
+          muted 
+          playsinline 
+          preload="auto">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </section>
+
+    <!-- POSITION 3: Quote by Sebastian Metal (Website 3) -->
+    <section class="showcase-section" id="pos-3">
+      <div class="showcase-video-card slide-up-reveal">
+        <video 
+          class="showcase-video" 
+          src="/assets/media/video/Website_3.mp4" 
+          autoplay 
+          loop 
+          muted 
+          playsinline 
+          preload="auto">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </section>
+
+    <!-- POSITION 4: Browse Website with Arrow (Website 4) -->
+    <section class="showcase-section" id="pos-4">
+      <a href="about.html" class="showcase-video-card slide-up-reveal" title="Click to Browse Portfolio (Starts with About Me)" style="text-decoration: none; cursor: pointer;">
+        <video 
+          class="showcase-video" 
+          src="/assets/media/video/Website_4.mp4?v=2" 
+          autoplay 
+          loop 
+          muted 
+          playsinline 
+          preload="auto">
+          Your browser does not support the video tag.
+        </video>
+      </a>
+
+      <!-- Quick Browse Destination Chips -->
+      <div class="browse-destinations-grid slide-up-reveal">
+        <a href="about.html" class="browse-chip">
+          <span class="chip-num">01</span>
+          <span class="chip-label">About Me</span>
+          <span class="chip-arrow">→</span>
+        </a>
+        <a href="expertise.html" class="browse-chip">
+          <span class="chip-num">02</span>
+          <span class="chip-label">Expertise</span>
+          <span class="chip-arrow">→</span>
+        </a>
+        <a href="milestones.html" class="browse-chip">
+          <span class="chip-num">03</span>
+          <span class="chip-label">Milestones</span>
+          <span class="chip-arrow">→</span>
+        </a>
+        <a href="projects.html" class="browse-chip">
+          <span class="chip-num">04</span>
+          <span class="chip-label">Projects</span>
+          <span class="chip-arrow">→</span>
+        </a>
+        <a href="connect.html" class="browse-chip">
+          <span class="chip-num">05</span>
+          <span class="chip-label">Connect</span>
+          <span class="chip-arrow">→</span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Navigation, Theme & Audio Engine -->
+  <script src="ultra-nav.js"></script>
+  <!-- 4-Video Slide-Up Scroll Engine -->
+  <script src="showcase-scroll.js"></script>
+
+  <!-- Magnetic Cursor Script -->
+  <script>
+    (function() {
+      // Disable on touch screens (phones & tablets)
+      if (window.matchMedia('(pointer: coarse)').matches) return;
+
+      const cursor = document.getElementById('custom-cursor');
+      const cursorDot = document.getElementById('custom-cursor-dot');
+      if (!cursor || !cursorDot) return;
+
+      let targetX = window.innerWidth / 2;
+      let targetY = window.innerHeight / 2;
+      let currentX = targetX;
+      let currentY = targetY;
+
+      window.addEventListener('mousemove', (e) => {
+        targetX = e.clientX;
+        targetY = e.clientY;
+      }, { passive: true });
+
+      function renderCursor() {
+        currentX += (targetX - currentX) * 0.18;
+        currentY += (targetY - currentY) * 0.18;
+
+        cursorDot.style.transform = `translate3d(${targetX}px, ${targetY}px, 0) translate(-50%, -50%)`;
+        cursor.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%)`;
+
+        requestAnimationFrame(renderCursor);
+      }
+      requestAnimationFrame(renderCursor);
+    })();
+  </script>
+</body>
+</html>
