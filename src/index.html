@@ -134,96 +134,34 @@
       </div>
     </section>
 
-    <!-- POSITION 5: Interactive 24HR Universal Clock & Continent Pixel Dot Map -->
-    <section class="world-clock-section" id="pos-5">
-      <div class="world-clock-card slide-up-reveal">
-        <!-- SVG Filter for Liquid Water Typography Refraction (Matching User Reference Video) -->
-        <svg class="water-clock-svg-defs" aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none;">
-          <defs>
-            <filter id="water-clock-refraction" x="-15%" y="-15%" width="130%" height="130%">
-              <feTurbulence type="fractalNoise" baseFrequency="0.018 0.045" numOctaves="3" result="noise" seed="4">
-                <animate attributeName="baseFrequency" dur="7s" values="0.018 0.045; 0.03 0.08; 0.022 0.04; 0.018 0.045" repeatCount="indefinite" />
-              </feTurbulence>
-              <feDisplacementMap in="SourceGraphic" in2="noise" scale="5.5" xChannelSelector="R" yChannelSelector="G" result="displaced" />
-              <feGaussianBlur in="displaced" stdDeviation="0.3" result="soft" />
-              <feMerge>
-                <feMergeNode in="soft" />
-                <feMergeNode in="displaced" />
-              </feMerge>
-            </filter>
-          </defs>
-        </svg>
-
-        <div class="world-clock-header">
-          <div class="clock-badge font-mono">
-            <span class="live-blink-dot"></span>
-            <span>GLOBAL TELEMETRY ENGINE // 24-HOUR SYNC</span>
-          </div>
-          <h2 class="world-clock-title">Continental Pixel Dot Map & Universal Clock</h2>
-          <p class="world-clock-subtitle">
-            Pixel-by-pixel geographic continent map with real-time solar cycle tracking and 10–12 live timezones per continent. Featuring 24HR aquatic water refraction typography.
-          </p>
+    <!-- POSITION 5: Hacktoberfest Continent Map & SF Pro Glowing 24HR Clock -->
+    <section class="hack-map-section" id="pos-5">
+      <div class="hack-map-wrapper slide-up-reveal">
+        <!-- Minimalist Continent Selector Navigation -->
+        <div class="hack-continent-nav">
+          <button type="button" class="map-continent-tab active" data-cont="all">All Continents</button>
+          <button type="button" class="map-continent-tab" data-cont="as">Asia</button>
+          <button type="button" class="map-continent-tab" data-cont="eu">Europe</button>
+          <button type="button" class="map-continent-tab" data-cont="na">North America</button>
+          <button type="button" class="map-continent-tab" data-cont="sa">South America</button>
+          <button type="button" class="map-continent-tab" data-cont="af">Africa</button>
+          <button type="button" class="map-continent-tab" data-cont="oc">Oceania</button>
         </div>
 
-        <!-- Continent Filter Tabs -->
-        <div class="continent-tabs-bar">
-          <button type="button" class="continent-tab active" data-cont="all">All Continents (66)</button>
-          <button type="button" class="continent-tab" data-cont="as">Asia (12)</button>
-          <button type="button" class="continent-tab" data-cont="eu">Europe (11)</button>
-          <button type="button" class="continent-tab" data-cont="na">North America (11)</button>
-          <button type="button" class="continent-tab" data-cont="sa">South America (10)</button>
-          <button type="button" class="continent-tab" data-cont="af">Africa (10)</button>
-          <button type="button" class="continent-tab" data-cont="oc">Oceania (10)</button>
-        </div>
+        <!-- The Exact Hacktoberfest Continent Map Stage with Integrated Time Overlay -->
+        <div class="hack-stage-container">
+          <!-- The Exact Hacktoberfest Map SVG injected by JS -->
+          <div class="hack-map-frame" id="hacktoberfest-map-container"></div>
 
-        <!-- Map & Clock Dual Column Layout -->
-        <div class="world-clock-grid">
-          <!-- Left: 240Hz Canvas Pixel Dot Continent Map -->
-          <div class="map-visualizer-box">
-            <div class="map-canvas-container">
-              <canvas id="world-map-canvas"></canvas>
-            </div>
-            <div class="map-status-bar font-mono">
-              <span id="water-clock-solar" class="solar-indicator day">● SOLAR: DAY PHASE</span>
-              <span id="water-clock-coords">18.9894° N, 73.1175° E</span>
-              <span>2,426 CONTINENT DOTS</span>
-            </div>
-          </div>
-
-          <!-- Right: 24HR Aquatic Water Typography Clock -->
-          <div class="time-telemetry-box">
-            <div class="water-clock-card">
-              <div class="water-clock-hud-top font-mono">
-                <span class="hud-label">UNIVERSAL 24HR TELEMETRY</span>
-                <span class="hud-tz-pill" id="water-clock-tz">IST (UTC +05:30)</span>
-              </div>
-
-              <!-- Main Liquid Typography Clock Display (Filtered with Water Refraction) -->
-              <div class="water-clock-display-wrap">
-                <div class="water-caustics-layer"></div>
-                <div class="water-clock-time-row">
-                  <span class="water-clock-digits font-mono" id="water-clock-digits">00:00:00</span>
-                  <span class="water-clock-sub font-mono" id="water-clock-sub">.00</span>
-                </div>
-              </div>
-
-              <div class="water-clock-meta">
-                <div class="water-clock-city" id="water-clock-city">NAVI MUMBAI, INDIA [HOME HUB]</div>
-                <div class="water-clock-caption font-mono">PRECISION ATOMIC TIME SYNCHRONIZED</div>
-              </div>
-            </div>
-
-            <!-- Quick-Select City Chips Grid (10-12 timezones per continent) -->
-            <div class="tz-chips-container">
-              <div class="tz-chips-header font-mono">
-                <span>SELECT CONTINENTAL REGION:</span>
-              </div>
-              <div class="tz-chips-grid" id="timezone-chips-grid">
-                <!-- Dynamically populated with 10-12 timezone chips -->
-              </div>
-            </div>
+          <!-- Centered Glowing 24HR Time HUD in SF Pro Font -->
+          <div class="hack-clock-hud">
+            <div class="hack-clock-time font-sf" id="map-clock-digits">00:00:00</div>
+            <div class="hack-clock-meta font-mono" id="map-clock-badge">NAVI MUMBAI [IST // UTC +05:30] ★ HOME</div>
           </div>
         </div>
+
+        <!-- Timezone Selector Pills (10-12 per continent) -->
+        <div class="hack-timezone-bar" id="map-timezone-pills"></div>
       </div>
     </section>
 
