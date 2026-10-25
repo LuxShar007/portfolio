@@ -3,15 +3,15 @@
   "trailingSlash": false,
   "rewrites": [
     { "source": "/", "destination": "/src/index.html" },
-    { "source": "/assets/(.*)", "destination": "/assets/$1" },
-    { "source": "/media/(.*)", "destination": "/assets/media/$1" },
     { "source": "/about", "destination": "/src/about.html" },
     { "source": "/expertise", "destination": "/src/expertise.html" },
     { "source": "/milestones", "destination": "/src/milestones.html" },
     { "source": "/projects", "destination": "/src/projects.html" },
     { "source": "/connect", "destination": "/src/connect.html" },
-    { "source": "/(.*)\\.html", "destination": "/src/$1.html" },
-    { "source": "/(.*)\\.(js|css|svg|png|jpg|jpeg|webp|mp4|webm|mp3|otf|ttf|woff|woff2)", "destination": "/src/$1.$2" }
+    { "source": "/assets/:match*", "destination": "/assets/:match*" },
+    { "source": "/media/:match*", "destination": "/assets/media/:match*" },
+    { "source": "/:filename([^/]+\\.(?:js|css|map|ico))", "destination": "/src/:filename" },
+    { "source": "/:filename([^/]+\\.html)", "destination": "/src/:filename" }
   ],
   "headers": [
     {

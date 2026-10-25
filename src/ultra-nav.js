@@ -319,7 +319,8 @@
   async function prefetchPage(url) {
     if (!url) return null;
     const cleanUrl = url.split('#')[0].split('?')[0];
-    const path = cleanUrl.substring(cleanUrl.lastIndexOf('/') + 1) || 'index.html';
+    let path = cleanUrl.substring(cleanUrl.lastIndexOf('/') + 1) || 'index.html';
+    if (!path.endsWith('.html')) path = path + '.html';
     if (!KNOWN_PAGES.includes(path)) return null;
     if (pageCache.has(path)) return pageCache.get(path);
 
@@ -355,8 +356,10 @@
   async function instantNavigate(targetUrl, updateHistory = true) {
     if (isTransitioning) return;
     const cleanTarget = targetUrl.split('#')[0].split('?')[0];
-    const targetPath = cleanTarget.substring(cleanTarget.lastIndexOf('/') + 1) || 'index.html';
-    const currentPath = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1) || 'index.html';
+    let targetPath = cleanTarget.substring(cleanTarget.lastIndexOf('/') + 1) || 'index.html';
+    if (!targetPath.endsWith('.html')) targetPath = targetPath + '.html';
+    let currentPath = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1) || 'index.html';
+    if (!currentPath.endsWith('.html')) currentPath = currentPath + '.html';
 
     if (targetPath === currentPath) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -401,9 +404,10 @@
       // Snap viewport to top instantly with zero lag
       window.scrollTo({ top: 0, behavior: 'instant' });
 
-      // Update browser history
+      // Update browser history with clean URL format
       if (updateHistory) {
-        window.history.pushState({ path: targetPath }, '', '/' + targetPath);
+        const historyUrl = targetPath === 'index.html' ? '/' : '/' + targetPath.replace(/\.html$/, '');
+        window.history.pushState({ path: targetPath }, '', historyUrl);
       }
 
       // Transition in smoothly

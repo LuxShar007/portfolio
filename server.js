@@ -49,24 +49,47 @@ const server = http.createServer((req, res) => {
     urlPath = '/index.html';
   }
 
-  // Resolve file candidate paths
-  let filePath;
-  if (urlPath.startsWith('/assets/')) {
-    filePath = path.join(ROOT_DIR, urlPath);
-  } else {
-    let pSrc = path.join(SRC_DIR, urlPath);
-    let pAssets = path.join(ASSETS_DIR, urlPath);
-    let pRoot = path.join(ROOT_DIR, urlPath);
+  // Normalize path by stripping repeated leading /src prefixes (e.g. from Vercel rewrites)
+  let cleanPath = urlPath;
+  while (cleanPath.startsWith('/src/')) {
+    cleanPath = cleanPath.slice(4);
+  }
+  if (!cleanPath.startsWith('/')) {
+    cleanPath = '/' + cleanPath;
+  }
 
-    if (fs.existsSync(pSrc) && !fs.statSync(pSrc).isDirectory()) {
-      filePath = pSrc;
-    } else if (fs.existsSync(pAssets) && !fs.statSync(pAssets).isDirectory()) {
-      filePath = pAssets;
-    } else if (fs.existsSync(pRoot) && !fs.statSync(pRoot).isDirectory()) {
-      filePath = pRoot;
-    } else {
-      filePath = pSrc; // default for 404
-    }
+  // Resolve file candidates in priority order
+  const candidates = [
+    // 1. Direct path in ROOT (e.g. /assets/media/video/...)
+    path.join(ROOT_DIR, urlPath),
+    // 2. Direct clean path in ROOT
+    path.join(ROOT_DIR, cleanPath),
+    // 3. Clean path in SRC_DIR (e.g. /styles.css, /ultra-nav.js)
+    path.join(SRC_DIR, cleanPath),
+    // 4. Clean URL support (.html) in SRC_DIR (e.g. /about -> /src/about.html)
+    path.join(SRC_DIR, cleanPath + '.html'),
+    // 5. Clean URL support (.html) in ROOT_DIR
+    path.join(ROOT_DIR, cleanPath + '.html'),
+    // 6. Direct in ASSETS_DIR
+    path.join(ASSETS_DIR, cleanPath),
+    // 7. Original urlPath in SRC_DIR
+    path.join(SRC_DIR, urlPath),
+    // 8. Original urlPath + .html in SRC_DIR
+    path.join(SRC_DIR, urlPath + '.html')
+  ];
+
+  let filePath = null;
+  for (const cand of candidates) {
+    try {
+      if (fs.existsSync(cand) && fs.statSync(cand).isFile()) {
+        filePath = cand;
+        break;
+      }
+    } catch (e) {}
+  }
+
+  if (!filePath) {
+    filePath = path.join(SRC_DIR, cleanPath); // Default path for 404
   }
 
   fs.stat(filePath, (err, stats) => {
