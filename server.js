@@ -118,8 +118,24 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`\n  ✦ Ultra-Premium Portfolio Server running at http://localhost:${PORT}/`);
-  console.log(`  ✦ Pitch Black Dark Mode / Ice White Bright Mode`);
-  console.log(`  ✦ Media stream enabled with HTTP Range support\n`);
+function startServer(port) {
+  server.listen(port, () => {
+    console.log(`\n  ✦ Ultra-Premium Portfolio Server running at http://localhost:${port}/`);
+    console.log(`  ✦ Pitch Black Dark Mode / Ice White Bright Mode`);
+    console.log(`  ✦ Media stream enabled with HTTP Range support\n`);
+  });
+}
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    const currentPort = PORT;
+    const nextPort = currentPort + 1;
+    console.warn(`\n  ⚠ Port ${currentPort} is currently in use. Falling back to http://localhost:${nextPort}/ ...`);
+    server.close();
+    startServer(nextPort);
+  } else {
+    console.error('Server error:', err);
+  }
 });
+
+startServer(PORT);
