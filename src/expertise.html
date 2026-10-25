@@ -193,6 +193,95 @@
 
       </div>
 
+      <!-- ═══ INTERACTIVE ROBOTICS KINEMATICS & SERVO LAB ══════════════════ -->
+      <div class="robotics-lab-section animate-fade">
+        <div class="robotics-lab-card">
+          <div class="robotics-lab-header">
+            <h2 class="robotics-lab-title">Robotic Arm Kinematics &amp; Joint Servo Controller</h2>
+            <p class="robotics-lab-desc">
+              Robotics combines spatial mathematics with real-time embedded control. Rotate the precision 72-tick rotary encoder below to command multi-axis joint angles, calculate Forward Kinematics (FK), and monitor live PID servo telemetry in real time.
+            </p>
+          </div>
+
+          <div class="robotics-lab-grid">
+            <!-- Left: Precision Rotary Knob Slider -->
+            <div class="knob-controller-card">
+              <!-- Joint Selector Pills -->
+              <div class="knob-joint-selector">
+                <button type="button" class="joint-pill active" data-joint="shoulder">J1: Shoulder Pitch</button>
+                <button type="button" class="joint-pill" data-joint="elbow">J2: Elbow Flexion</button>
+                <button type="button" class="joint-pill" data-joint="wrist">J3: Wrist Angle</button>
+                <button type="button" class="joint-pill" data-joint="gripper">Actuator: Torque</button>
+              </div>
+
+              <!-- Rotary Knob Dial -->
+              <div class="knob-wrapper">
+                <div class="knob-slider" id="robotics-knob" data-min="0" data-max="180" data-value="45">
+                  <!-- 72 Tick Ring -->
+                  <svg viewBox="0 0 100 100" class="knob-ticks-svg" id="knob-ticks-svg"></svg>
+
+                  <!-- Rotating Pointer Arrow -->
+                  <div class="knob-arrow-wrap" id="knob-arrow">
+                    <div class="knob-arrow-pointer"></div>
+                  </div>
+
+                  <!-- Inner Rotary Disk with Sliding Number Counter -->
+                  <div class="knob-inner-disk">
+                    <div class="knob-inner-border"></div>
+                    <div class="sliding-number-container font-mono" id="knob-sliding-number">
+                      <!-- Digits generated dynamically with slot animation -->
+                    </div>
+                    <span class="knob-unit-label font-mono" id="knob-unit-label">DEG (°)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Knob Quick Preset Buttons -->
+              <div class="knob-presets-toolbar">
+                <button type="button" class="knob-preset-btn" data-angle="0">0° Home</button>
+                <button type="button" class="knob-preset-btn active" data-angle="45">45° Reach</button>
+                <button type="button" class="knob-preset-btn" data-angle="90">90° Vertical</button>
+                <button type="button" class="knob-preset-btn" data-angle="140">140° Extended</button>
+                <button type="button" class="knob-auto-btn" id="knob-auto-cycle-btn">
+                  <i data-lucide="play" id="knob-cycle-icon"></i>
+                  <span>Auto Scan</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Right: Live Robotic Arm Canvas & Telemetry Dashboard -->
+            <div class="robotics-visualizer-card">
+              <div class="robot-canvas-wrapper">
+                <canvas id="robot-arm-canvas" width="480" height="280"></canvas>
+                <div class="robot-coords-badge font-mono" id="robot-coords-badge">
+                  END-EFFECTOR: X: 218mm | Y: 164mm
+                </div>
+              </div>
+
+              <!-- Live Kinematics Telemetry Readout -->
+              <div class="robotics-telemetry-grid font-mono">
+                <div class="telemetry-stat">
+                  <span class="stat-name">JOINT ANGLE θ</span>
+                  <span class="stat-val text-cyan" id="stat-angle">45.0°</span>
+                </div>
+                <div class="telemetry-stat">
+                  <span class="stat-name">HOLDING TORQUE τ</span>
+                  <span class="stat-val text-violet" id="stat-torque">8.42 N·m</span>
+                </div>
+                <div class="telemetry-stat">
+                  <span class="stat-name">PID SETTLING TIME</span>
+                  <span class="stat-val text-emerald" id="stat-pid">12.4 ms (0.01° err)</span>
+                </div>
+                <div class="telemetry-stat">
+                  <span class="stat-name">BLDC BUS CURRENT</span>
+                  <span class="stat-val text-amber" id="stat-current">1.38 A (24V FOC)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- ═══ INTERACTIVE API ARCHITECTURE LAB ════════════════════════ -->
       <div class="api-lab-section animate-fade">
         <div class="api-lab-card">
@@ -380,6 +469,7 @@
 
   <script src="ultra-nav.js"></script>
   <script src="audio-engine.js"></script>
+  <script src="robotics-lab.js"></script>
   <script src="api-lab.js"></script>
   <script src="water-audio-particles.js"></script>
   <script src="app_v3.js"></script>
