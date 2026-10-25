@@ -757,12 +757,6 @@
     ctx.beginPath(); ctx.moveTo(axX, axY); ctx.lineTo(axX, axY - 22); ctx.stroke();
     ctx.fillText('Z', axX - 4, axY - 26);
 
-    // Scan Status
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-    ctx.fillText('3D MONOCHROME LIDAR [D800 PROJECTION]', 14, 22);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
-    ctx.fillText('DRAG CANVAS TO ORBIT 3D PERSPECTIVE', 14, 36);
-
     ctx.restore();
   }
 
