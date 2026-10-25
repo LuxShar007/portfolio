@@ -271,8 +271,11 @@
 
   // Auto-init on page load
   function startHackMap() {
-    window.HackMapClock = new HacktoberfestMapClock();
+    if (document.getElementById('hacktoberfest-map-container')) {
+      window.HackMapClock = new HacktoberfestMapClock();
+    }
   }
+  window.startHackMap = startHackMap;
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', startHackMap);

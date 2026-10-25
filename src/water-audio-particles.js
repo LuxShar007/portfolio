@@ -10,8 +10,8 @@
 (function () {
   'use strict';
 
-  // Constants & Physics Parameters
-  const NUM_3D_DROPLETS = 220;
+  // Constants & Physics Parameters (Calibrated for locked 240Hz rendering)
+  const NUM_3D_DROPLETS = 140;
   const NUM_3D_RIPPLES = 12;
   const MAX_3D_SPLASH = 40;
   const BPM = 128.0;
@@ -463,6 +463,18 @@
       // Decay beat flash & global bounce
       this.beatFlash *= 0.88;
       this.globalBounce *= 0.85;
+
+      // High-Performance 240Hz Idle Sleep Bypass: When audio is idle and no splashes exist, sleep GPU pipeline
+      const isIdle = this.activityWeight < 0.002 && this.ripples.length === 0 && this.splashDroplets.length === 0;
+      if (isIdle) {
+        if (!this.wasIdle) {
+          this.ctx.clearRect(0, 0, this.W, this.H);
+          this.wasIdle = true;
+        }
+        this.animId = requestAnimationFrame(this.animate);
+        return;
+      }
+      this.wasIdle = false;
 
       // Clear Canvas
       this.ctx.clearRect(0, 0, this.W, this.H);

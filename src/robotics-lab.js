@@ -169,6 +169,7 @@
     state.points = pts;
   }
 
+  window.init3DLidarLab = init3DLidarLab;
   document.addEventListener('DOMContentLoaded', init3DLidarLab);
   if (document.readyState !== 'loading') init3DLidarLab();
 

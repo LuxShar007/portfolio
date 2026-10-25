@@ -154,6 +154,7 @@ window.AudioEngine?.playBeep(880, 0.08); // Success chime`
   let currentValue = 1;
   let autoPlayInterval = null;
 
+  window.initAdaptiveSlider = initAdaptiveSlider;
   document.addEventListener('DOMContentLoaded', initAdaptiveSlider);
   if (document.readyState !== 'loading') initAdaptiveSlider();
 

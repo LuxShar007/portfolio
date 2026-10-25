@@ -6,24 +6,24 @@
 (function () {
   'use strict';
 
-  document.addEventListener('DOMContentLoaded', () => {
+  function initShowcaseScroll() {
     const revealCards = document.querySelectorAll('.slide-up-reveal');
     const videos = document.querySelectorAll('.showcase-video');
+    if (!revealCards.length && !videos.length) return;
     let hasEngagedAudio = false;
 
     // 1. Initial visual slide-up for Section 1 after brief intro pause
     if (revealCards.length > 0) {
       setTimeout(() => {
         revealCards[0].classList.add('is-revealed');
-      }, 300);
+      }, 200);
     }
 
     // 2. IntersectionObserver for Bi-directional Slide-Up on Scroll
-    // rootMargin triggers slightly before entering viewport for silky responsiveness
     const observerOptions = {
       root: null,
-      rootMargin: '-4% 0px -6% 0px',
-      threshold: 0.1
+      rootMargin: '-2% 0px -4% 0px',
+      threshold: 0.08
     };
 
     const revealObserver = new IntersectionObserver((entries) => {
@@ -45,8 +45,6 @@
             }
           }
         } else {
-          // BI-DIRECTIONAL FIX: Reset when element leaves viewport in either direction
-          // (whether scrolled above or below) so scrolling back up re-triggers the slide-up animation!
           entry.target.classList.remove('is-revealed');
         }
       });
@@ -80,5 +78,13 @@
         vid.play().catch(() => {});
       });
     });
-  });
+  }
+
+  window.initShowcaseScroll = initShowcaseScroll;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initShowcaseScroll);
+  } else {
+    initShowcaseScroll();
+  }
 })();
