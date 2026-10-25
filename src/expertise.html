@@ -197,10 +197,10 @@
       <div class="api-lab-section animate-fade">
         <div class="api-lab-card">
           <div class="api-lab-header">
-            <div class="api-lab-tag font-mono">// LIVE SYSTEMS &amp; BACKEND TELEMETRY</div>
-            <h2 class="api-lab-title">What is an API? Interactive Data-Flow Simulator</h2>
+            <div class="api-lab-tag font-mono">// REAL-TIME DATA ARCHITECTURE</div>
+            <h2 class="api-lab-title">How Does an API Work? Interactive Lifecycle Scrubber</h2>
             <p class="api-lab-desc">
-              An <strong>API (Application Programming Interface)</strong> is the digital messenger connecting user interfaces to backend logic and databases. Click any HTTP route below to dispatch simulated data packets and watch the full request-response lifecycle in real-time.
+              Drag the tactile adaptive slider below to step through each milestone of a modern API request—from the initial button click on the client, through edge gateway routing and database lookups, to instant 240Hz UI state synchronization.
             </p>
           </div>
 
@@ -253,37 +253,80 @@
             </div>
           </div>
 
-          <!-- Action Buttons / Endpoint Triggers -->
-          <div class="api-actions-toolbar">
-            <span class="font-mono" style="font-size: 0.72rem; color: var(--text-muted); margin-right: 4px;">DISPATCH ROUTE:</span>
-            <button type="button" class="api-action-pill active" data-endpoint="health">
-              <span class="pill-verb get">GET</span>
-              <span>/api/v1/system/health</span>
-            </button>
-            <button type="button" class="api-action-pill" data-endpoint="telemetry">
-              <span class="pill-verb post">POST</span>
-              <span>/api/v1/robotics/telemetry</span>
-            </button>
-            <button type="button" class="api-action-pill" data-endpoint="database">
-              <span class="pill-verb get">GET</span>
-              <span>/api/v1/users/profile</span>
-            </button>
-            <button type="button" class="api-action-pill" data-endpoint="auth">
-              <span class="pill-verb post">POST</span>
-              <span>/api/v1/auth/jwt-handshake</span>
-            </button>
+          <!-- ═══ ADAPTIVE SLIDER CARD (Interactive API Lifecycle Scrubber) ═══ -->
+          <div class="adaptive-slider-card">
+            <div class="adaptive-slider-header">
+              <span class="adaptive-slider-label font-mono">// API REQUEST LIFECYCLE SCRUBBER</span>
+              <div class="adaptive-slider-value-row">
+                <div class="adaptive-slider-animated-text" id="api-slider-text">
+                  <!-- Dynamically populated animated character spans -->
+                </div>
+                <span class="adaptive-slider-unit font-mono" id="api-slider-unit">STEP 1</span>
+                <span class="adaptive-slider-badge font-mono" id="api-slider-stage-badge">HTTP GET</span>
+              </div>
+            </div>
+
+            <!-- Tactile Slider Track -->
+            <div class="adaptive-slider-track-wrap">
+              <div class="adaptive-slider-track">
+                <!-- 5 Milestone Snap Dots -->
+                <div class="adaptive-slider-dots" id="api-slider-dots">
+                  <div class="slider-dot active" title="Stage 1: Client Request"></div>
+                  <div class="slider-dot" title="Stage 2: Gateway &amp; Auth"></div>
+                  <div class="slider-dot" title="Stage 3: Database &amp; Cache"></div>
+                  <div class="slider-dot" title="Stage 4: JSON 200 Payload"></div>
+                  <div class="slider-dot" title="Stage 5: UI DOM Sync"></div>
+                </div>
+
+                <!-- Animated Gradient Progress Fill -->
+                <div class="adaptive-slider-fill" id="api-slider-fill"></div>
+
+                <!-- Native Invisible Range Input -->
+                <input
+                  type="range"
+                  id="api-adaptive-range"
+                  min="1"
+                  max="5"
+                  step="1"
+                  value="1"
+                  title="Drag API Lifecycle Stage"
+                  class="adaptive-slider-native-input"
+                  aria-label="API Lifecycle Stage Scrubber"
+                />
+
+                <!-- Floating Spring Thumb -->
+                <div class="adaptive-slider-thumb-wrap" id="api-slider-thumb">
+                  <div class="adaptive-slider-thumb-inner"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stage Quick-Jump Pills & Auto-Play Controls -->
+            <div class="adaptive-slider-controls">
+              <div class="slider-step-pills">
+                <button type="button" class="slider-step-pill active" data-step="1">1. Client Request</button>
+                <button type="button" class="slider-step-pill" data-step="2">2. Gateway Router</button>
+                <button type="button" class="slider-step-pill" data-step="3">3. Database / Cache</button>
+                <button type="button" class="slider-step-pill" data-step="4">4. JSON Response</button>
+                <button type="button" class="slider-step-pill" data-step="5">5. UI Render</button>
+              </div>
+              <button type="button" class="slider-play-btn" id="api-slider-autoplay-btn">
+                <i data-lucide="play" id="api-play-icon"></i>
+                <span id="api-play-text">Auto Play</span>
+              </button>
+            </div>
           </div>
 
           <!-- Live Telemetry Inspector Window -->
           <div class="api-inspector font-mono">
             <div class="api-inspector-header">
               <div class="api-inspector-route">
-                <span class="api-method-pill get" id="api-method-badge">GET</span>
-                <span class="api-path-label" id="api-path-text">/api/v1/system/health</span>
+                <span class="api-method-pill get" id="api-method-badge">HTTP GET</span>
+                <span class="api-path-label" id="api-path-text">/api/v1/system/telemetry</span>
               </div>
               <div class="api-inspector-metrics">
-                <span class="api-latency-badge font-mono">LATENCY: <strong id="api-latency-val">3.8ms</strong></span>
-                <span class="api-status-badge success font-mono" id="api-status-badge">200 OK</span>
+                <span class="api-latency-badge font-mono">LATENCY: <strong id="api-latency-val">0.4ms</strong></span>
+                <span class="api-status-badge success font-mono" id="api-status-badge">CLIENT DISPATCH</span>
               </div>
             </div>
 
