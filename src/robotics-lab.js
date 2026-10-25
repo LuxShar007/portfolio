@@ -1,6 +1,7 @@
 /* ==========================================================================
-   SHARVIN MHATRE PORTFOLIO — AUTONOMOUS DRONE FLIGHT & 360° LIDAR SCANNER
-   Real-time 360° LiDAR raycasting, point-cloud terrain mapping, and drone flight
+   SHARVIN MHATRE PORTFOLIO — 3D LIDAR POINT CLOUD SCANNER (BLACK & WHITE)
+   Inspired by DIY 3D LiDAR (D800): Proper 3D perspective projection,
+   dense laser point-cloud spatial scan, pure monochrome aesthetics,
    manipulated via precision 72-tick rotary encoder with SlidingNumber odometer.
    ========================================================================== */
 
@@ -9,93 +10,192 @@
 
   const TICK_COUNT = 72;
 
-  // Drone & LiDAR Sensor Modes
+  // 3D LiDAR Modes
   const MODES = {
-    lidar: {
-      name: 'LiDAR Sweep Azimuth',
-      unit: 'AZIMUTH (°)',
-      min: 0,
-      max: 360,
-      defaultVal: 120,
-      badge: '360° OPTICAL LASER'
-    },
-    altitude: {
-      name: 'Drone Altitude (AGL)',
-      unit: 'ALTITUDE (m)',
-      min: 0,
-      max: 60,
-      defaultVal: 18,
-      badge: 'BARO & TOF SENSOR'
-    },
     yaw: {
-      name: 'Flight Heading / Yaw',
-      unit: 'HEADING (°)',
+      name: '3D Orbit Azimuth',
+      unit: 'YAW (°)',
       min: 0,
       max: 360,
-      defaultVal: 45,
-      badge: 'IMU COMPASS LOCK'
+      defaultVal: 135,
+      badge: '360° SPATIAL ROTATION'
     },
-    frequency: {
-      name: 'LiDAR Scan Frequency',
-      unit: 'PULSE RATE (Hz)',
-      min: 10,
+    pitch: {
+      name: 'LiDAR Tilt / Pitch',
+      unit: 'PITCH (°)',
+      min: -45,
+      max: 45,
+      defaultVal: 18,
+      badge: 'VERTICAL SCAN MIRROR'
+    },
+    density: {
+      name: 'Point Cloud Density',
+      unit: 'RETURNS (K)',
+      min: 1,
+      max: 20,
+      defaultVal: 12,
+      badge: 'LASER PULSE SAMPLES'
+    },
+    zoom: {
+      name: 'LiDAR Sensor Range',
+      unit: 'RANGE (m)',
+      min: 5,
       max: 50,
-      defaultVal: 25,
-      badge: 'ROTATING PUCK RPM'
+      defaultVal: 24,
+      badge: 'TIME-OF-FLIGHT DEPTH'
     }
   };
 
   const state = {
-    activeMode: 'lidar',
+    activeMode: 'yaw',
     values: {
-      lidar: 120,
-      altitude: 18,
-      yaw: 45,
-      frequency: 25
+      yaw: 135,
+      pitch: 18,
+      density: 12,
+      zoom: 24
     },
-    isDragging: false,
-    prevVal: 120,
+    isDraggingKnob: false,
+    prevVal: 135,
     blur: 0,
-    autoScan: true,
-    scanAngle: 0,
-    pointCloud: [],
-    dronePos: { x: 0, y: 0, targetX: 0, targetY: 0 }
+    autoRotate: true,
+
+    // 3D Camera & Orientation
+    camYaw: (135 * Math.PI) / 180,
+    camPitch: (18 * Math.PI) / 180,
+    camDist: 340,
+    isOrbitingCanvas: false,
+    lastMouseX: 0,
+    lastMouseY: 0,
+
+    // 3D Laser Beam Sweep
+    beamAngle: 0,
+    sweepSpeed: 0.04,
+    points: []
   };
 
-  // Simulated 2D/3D Obstacles in surrounding spatial environment
-  const OBSTACLES = [
-    { type: 'box', x: 80, y: 70, w: 55, h: 45, label: 'Building A' },
-    { type: 'box', x: 340, y: 60, w: 70, h: 60, label: 'Telecom Tower' },
-    { type: 'circle', x: 110, y: 210, r: 28, label: 'Tree Cluster' },
-    { type: 'box', x: 320, y: 200, w: 85, h: 40, label: 'Warehouse B' },
-    { type: 'circle', x: 240, y: 40, r: 22, label: 'Pylon' },
-    { type: 'wall', x1: 30, y1: 260, x2: 450, y2: 260, label: 'Perimeter Barrier' }
-  ];
+  /**
+   * Pre-generates realistic 3D Point Cloud geometry:
+   * Ground plane grid, central autonomous drone, surrounding columns, walls, and obstacles.
+   */
+  function generate3DPointCloud() {
+    const pts = [];
 
-  document.addEventListener('DOMContentLoaded', initDroneLidarLab);
-  if (document.readyState !== 'loading') initDroneLidarLab();
+    // 1. 3D Ground Plane Grid (Z from -180 to 180, X from -180 to 180, Y = 70)
+    for (let x = -180; x <= 180; x += 18) {
+      for (let z = -180; z <= 180; z += 18) {
+        pts.push({
+          x: x + (Math.random() - 0.5) * 3,
+          y: 70 + (Math.random() - 0.5) * 2,
+          z: z + (Math.random() - 0.5) * 3,
+          intensity: 0.4 + Math.random() * 0.35,
+          hitTime: 0
+        });
+      }
+    }
 
-  function initDroneLidarLab() {
+    // 2. Central Autonomous Drone & Scanner Pod at (0, -25, 0)
+    // Chassis frame
+    for (let t = 0; t <= Math.PI * 2; t += 0.25) {
+      const rx = Math.cos(t) * 22;
+      const rz = Math.sin(t) * 22;
+      pts.push({ x: rx, y: -25, z: rz, intensity: 1.0, hitTime: 0 });
+      pts.push({ x: rx * 0.6, y: -30, z: rz * 0.6, intensity: 1.0, hitTime: 0 });
+    }
+    // 4 Quadcopter Arms
+    [-1, 1].forEach((sx) => {
+      [-1, 1].forEach((sz) => {
+        for (let d = 8; d <= 48; d += 6) {
+          pts.push({ x: sx * d, y: -25, z: sz * d, intensity: 0.95, hitTime: 0 });
+        }
+        // Rotor rings
+        for (let a = 0; a < Math.PI * 2; a += 0.45) {
+          pts.push({
+            x: sx * 48 + Math.cos(a) * 16,
+            y: -25,
+            z: sz * 48 + Math.sin(a) * 16,
+            intensity: 0.85,
+            hitTime: 0
+          });
+        }
+      });
+    });
+
+    // 3. 3D Cylindrical Structural Columns / Pillars
+    const columns = [
+      { cx: -100, cz: -90, r: 24, h: 140 },
+      { cx: 110, cz: -80, r: 20, h: 140 },
+      { cx: -90, cz: 90, r: 18, h: 130 },
+      { cx: 120, cz: 95, r: 26, h: 150 }
+    ];
+
+    columns.forEach((col) => {
+      for (let y = 70; y >= 70 - col.h; y -= 8) {
+        for (let a = 0; a < Math.PI * 2; a += 0.35) {
+          pts.push({
+            x: col.cx + Math.cos(a) * col.r + (Math.random() - 0.5) * 2,
+            y: y + (Math.random() - 0.5) * 2,
+            z: col.cz + Math.sin(a) * col.r + (Math.random() - 0.5) * 2,
+            intensity: 0.55 + Math.random() * 0.4,
+            hitTime: 0
+          });
+        }
+      }
+    });
+
+    // 4. Perimeter Walls & Geometry Obstacles
+    for (let x = -170; x <= 170; x += 10) {
+      for (let y = 70; y >= -40; y -= 12) {
+        // Back wall (z = -180)
+        pts.push({ x: x, y: y, z: -180 + (Math.random() - 0.5) * 2, intensity: 0.45, hitTime: 0 });
+        // Right wall (x = 180)
+        pts.push({ x: 180 + (Math.random() - 0.5) * 2, y: y, z: x, intensity: 0.45, hitTime: 0 });
+      }
+    }
+
+    // 5. Test Sphere / Calibration Target at (40, 10, -30)
+    for (let lat = -Math.PI / 2; lat <= Math.PI / 2; lat += 0.28) {
+      for (let lon = 0; lon <= Math.PI * 2; lon += 0.38) {
+        const sr = 22;
+        pts.push({
+          x: 40 + sr * Math.cos(lat) * Math.cos(lon),
+          y: 10 + sr * Math.sin(lat),
+          z: -30 + sr * Math.cos(lat) * Math.sin(lon),
+          intensity: 0.9,
+          hitTime: 0
+        });
+      }
+    }
+
+    state.points = pts;
+  }
+
+  document.addEventListener('DOMContentLoaded', init3DLidarLab);
+  if (document.readyState !== 'loading') init3DLidarLab();
+
+  function init3DLidarLab() {
     const knobEl = document.getElementById('robotics-knob');
     const canvas = document.getElementById('robot-arm-canvas');
     if (!knobEl || !canvas) return;
 
-    // 1. Build 72-Tick SVG Ring
+    // 1. Generate 3D Spatial Geometry
+    generate3DPointCloud();
+
+    // 2. Build 72-Tick SVG Ring
     buildTickRing();
 
-    // 2. Rotary Knob Interaction
+    // 3. Rotary Knob Drag & Math
     initKnobDrag(knobEl);
 
-    // 3. Mode Selector Pills
+    // 4. Mode Selector Pills
     initModeSelector();
 
-    // 4. Presets & Controls
+    // 5. Quick Presets & Controls
     initPresets();
 
-    // 5. Start Canvas Drone & LiDAR Simulation Loop
-    initLidarCanvas(canvas);
+    // 6. 3D Canvas Orbit & Rendering Loop
+    initCanvasOrbit(canvas);
 
-    // Initial render
+    // Initial Knob UI
     updateKnobDisplay(state.values[state.activeMode]);
   }
 
@@ -113,8 +213,8 @@
       line.setAttribute('x2', '50');
       line.setAttribute('y2', isMajor ? '11' : '8');
       line.setAttribute('transform', `rotate(${angle} 50 50)`);
-      line.setAttribute('stroke', isMajor ? 'rgba(75, 213, 238, 0.9)' : 'rgba(255, 255, 255, 0.22)');
-      line.setAttribute('stroke-width', isMajor ? '1.15' : '0.65');
+      line.setAttribute('stroke', isMajor ? '#ffffff' : 'rgba(255, 255, 255, 0.25)');
+      line.setAttribute('stroke-width', isMajor ? '1.2' : '0.65');
       line.setAttribute('stroke-linecap', 'round');
       svg.appendChild(line);
     }
@@ -140,14 +240,16 @@
     }
 
     knobEl.addEventListener('mousedown', (e) => {
-      state.isDragging = true;
+      state.isDraggingKnob = true;
+      state.autoRotate = false;
+      updateAutoBtnState();
       updateFromPointer(e.clientX, e.clientY);
 
       const onMove = (ev) => {
-        if (state.isDragging) updateFromPointer(ev.clientX, ev.clientY);
+        if (state.isDraggingKnob) updateFromPointer(ev.clientX, ev.clientY);
       };
       const onUp = () => {
-        state.isDragging = false;
+        state.isDraggingKnob = false;
         state.blur = 0;
         updateBlur();
         window.removeEventListener('mousemove', onMove);
@@ -160,16 +262,18 @@
 
     knobEl.addEventListener('touchstart', (e) => {
       if (!e.touches.length) return;
-      state.isDragging = true;
+      state.isDraggingKnob = true;
+      state.autoRotate = false;
+      updateAutoBtnState();
       updateFromPointer(e.touches[0].clientX, e.touches[0].clientY);
 
       const onTouchMove = (ev) => {
-        if (state.isDragging && ev.touches.length) {
+        if (state.isDraggingKnob && ev.touches.length) {
           updateFromPointer(ev.touches[0].clientX, ev.touches[0].clientY);
         }
       };
       const onTouchEnd = () => {
-        state.isDragging = false;
+        state.isDraggingKnob = false;
         state.blur = 0;
         updateBlur();
         window.removeEventListener('touchmove', onTouchMove);
@@ -187,11 +291,16 @@
 
     if (clamped !== state.values[modeKey]) {
       const diff = Math.abs(clamped - state.values[modeKey]);
-      state.blur = state.isDragging ? Math.min(6, diff * 0.4) : 0;
+      state.blur = state.isDraggingKnob ? Math.min(6, diff * 0.4) : 0;
       state.values[modeKey] = clamped;
 
-      if (modeKey === 'lidar') {
-        state.scanAngle = (clamped * Math.PI) / 180;
+      // Update 3D Camera Angles
+      if (modeKey === 'yaw') {
+        state.camYaw = (clamped * Math.PI) / 180;
+      } else if (modeKey === 'pitch') {
+        state.camPitch = (clamped * Math.PI) / 180;
+      } else if (modeKey === 'zoom') {
+        state.camDist = 180 + (clamped / 50) * 320;
       }
 
       if (playTickSound && window.AudioEngine && typeof window.AudioEngine.playClick === 'function') {
@@ -227,14 +336,19 @@
     updateBlur();
   }
 
-  /**
-   * Slot-Digit Odometer (User Component SlidingNumber logic)
-   */
   function renderSlidingNumber(container, value) {
-    const str = Math.abs(value).toString().padStart(value < 0 ? 3 : 2, '0');
+    const isNeg = value < 0;
+    const str = Math.abs(value).toString().padStart(isNeg ? 3 : 2, '0');
     const digits = str.split('');
 
     container.innerHTML = '';
+    if (isNeg) {
+      const minus = document.createElement('span');
+      minus.className = 'slot-digit-minus';
+      minus.textContent = '-';
+      container.appendChild(minus);
+    }
+
     digits.forEach((char) => {
       const digitVal = parseInt(char, 10);
       const digitCol = document.createElement('div');
@@ -281,6 +395,8 @@
     const presetBtns = document.querySelectorAll('.knob-preset-btn');
     presetBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
+        state.autoRotate = false;
+        updateAutoBtnState();
         const angle = parseInt(btn.getAttribute('data-angle'), 10);
         if (!isNaN(angle)) {
           presetBtns.forEach((b) => b.classList.remove('active'));
@@ -293,13 +409,19 @@
     const autoBtn = document.getElementById('knob-auto-cycle-btn');
     if (autoBtn) {
       autoBtn.addEventListener('click', () => {
-        state.autoScan = !state.autoScan;
-        autoBtn.classList.toggle('active', state.autoScan);
-        const icon = document.getElementById('knob-cycle-icon');
-        if (icon) icon.setAttribute('data-lucide', state.autoScan ? 'pause' : 'play');
-        if (window.lucide) window.lucide.createIcons();
+        state.autoRotate = !state.autoRotate;
+        updateAutoBtnState();
       });
     }
+  }
+
+  function updateAutoBtnState() {
+    const autoBtn = document.getElementById('knob-auto-cycle-btn');
+    if (!autoBtn) return;
+    autoBtn.classList.toggle('active', state.autoRotate);
+    const icon = document.getElementById('knob-cycle-icon');
+    if (icon) icon.setAttribute('data-lucide', state.autoRotate ? 'pause' : 'play');
+    if (window.lucide) window.lucide.createIcons();
   }
 
   function animateModeTo(modeKey, targetVal) {
@@ -327,372 +449,319 @@
     const statCurrent = document.getElementById('stat-current');
     const coordsBadge = document.getElementById('robot-coords-badge');
 
-    const ptsSec = (state.values.frequency * 720).toLocaleString();
-    const altMeters = state.values.altitude;
-    const headingDeg = state.values.yaw;
-    const scanAzimuth = state.values.lidar;
+    const totalPts = Math.min(state.points.length, state.values.density * 180);
+    const rangeMeters = state.values.zoom;
 
-    if (statAngle) statAngle.textContent = `${scanAzimuth}° AZIMUTH`;
-    if (statTorque) statTorque.textContent = `${ptsSec} PTS/SEC`;
-    if (statPid) statPid.textContent = `${altMeters}.0m AGL (±0.02m TOF)`;
-    if (statCurrent) statCurrent.textContent = `${headingDeg}° COMPASS HDG`;
-    if (coordsBadge) coordsBadge.textContent = `POINT CLOUD: ${state.pointCloud.length} RETURNS | STATUS: ACTIVE SCAN`;
+    if (statAngle) statAngle.textContent = `${state.values.yaw}° AZIMUTH`;
+    if (statTorque) statTorque.textContent = `${totalPts.toLocaleString()} CLOUD PTS`;
+    if (statPid) statPid.textContent = `PITCH: ${state.values.pitch}° (3D TOF)`;
+    if (statCurrent) statCurrent.textContent = `RANGE: ${rangeMeters}.0m FOV`;
+    if (coordsBadge) coordsBadge.textContent = `3D LIDAR: ${totalPts.toLocaleString()} POINTS | SCANNER: 360° ACTIVE`;
   }
 
   /**
-   * Real-time 360° LiDAR Ray-Caster and Autonomous Drone Flight Renderer
+   * Interactive 3D Canvas Orbit Controls (Mouse Drag Directly on the 3D Canvas)
    */
-  function initLidarCanvas(canvas) {
+  function initCanvasOrbit(canvas) {
+    canvas.addEventListener('mousedown', (e) => {
+      state.isOrbitingCanvas = true;
+      state.autoRotate = false;
+      updateAutoBtnState();
+      state.lastMouseX = e.clientX;
+      state.lastMouseY = e.clientY;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!state.isOrbitingCanvas) return;
+      const dx = e.clientX - state.lastMouseX;
+      const dy = e.clientY - state.lastMouseY;
+      state.lastMouseX = e.clientX;
+      state.lastMouseY = e.clientY;
+
+      state.camYaw += dx * 0.008;
+      state.camPitch = Math.min(Math.max(state.camPitch - dy * 0.008, -Math.PI * 0.35), Math.PI * 0.35);
+
+      // Sync knob if active mode is yaw
+      const degYaw = Math.round(((state.camYaw % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2)) * (180 / Math.PI));
+      state.values.yaw = degYaw;
+      if (state.activeMode === 'yaw') {
+        updateKnobDisplay(degYaw);
+      }
+      updateTelemetry();
+    });
+
+    window.addEventListener('mouseup', () => {
+      state.isOrbitingCanvas = false;
+    });
+
+    // Touch support for 3D orbit
+    canvas.addEventListener('touchstart', (e) => {
+      if (!e.touches.length) return;
+      state.isOrbitingCanvas = true;
+      state.autoRotate = false;
+      updateAutoBtnState();
+      state.lastMouseX = e.touches[0].clientX;
+      state.lastMouseY = e.touches[0].clientY;
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!state.isOrbitingCanvas || !e.touches.length) return;
+      const dx = e.touches[0].clientX - state.lastMouseX;
+      const dy = e.touches[0].clientY - state.lastMouseY;
+      state.lastMouseX = e.touches[0].clientX;
+      state.lastMouseY = e.touches[0].clientY;
+
+      state.camYaw += dx * 0.008;
+      state.camPitch = Math.min(Math.max(state.camPitch - dy * 0.008, -Math.PI * 0.35), Math.PI * 0.35);
+
+      const degYaw = Math.round(((state.camYaw % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2)) * (180 / Math.PI));
+      state.values.yaw = degYaw;
+      if (state.activeMode === 'yaw') updateKnobDisplay(degYaw);
+      updateTelemetry();
+    }, { passive: true });
+
+    window.addEventListener('touchend', () => {
+      state.isOrbitingCanvas = false;
+    });
+
+    // Mouse wheel zoom
+    canvas.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      state.camDist = Math.min(Math.max(state.camDist + e.deltaY * 0.3, 160), 550);
+    }, { passive: false });
+
+    // Start 3D Rendering Loop
+    start3DRenderLoop(canvas);
+  }
+
+  /**
+   * 3D LiDAR Projection & Monochrome Rendering Loop (240Hz High Refresh)
+   */
+  function start3DRenderLoop(canvas) {
     const ctx = canvas.getContext('2d');
     const W = canvas.width;
     const H = canvas.height;
+    const focalLength = 320;
 
-    state.dronePos.x = W / 2;
-    state.dronePos.y = H / 2;
-    state.dronePos.targetX = W / 2;
-    state.dronePos.targetY = H / 2;
-
-    // Interactive Mouse Target for Drone Flight
-    canvas.addEventListener('mousemove', (e) => {
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
-      state.dronePos.targetX = (e.clientX - rect.left) * scaleX;
-      state.dronePos.targetY = (e.clientY - rect.top) * scaleY;
-    });
-
-    let time = 0;
-
-    function renderLidar() {
-      time += 0.02;
-
-      // 1. Drone Hover Physics (smooth spring towards target)
-      state.dronePos.x += (state.dronePos.targetX - state.dronePos.x) * 0.04;
-      state.dronePos.y += (state.dronePos.targetY - state.dronePos.y) * 0.04;
-
-      // Subtle aerodynamic hover bobbing
-      const hoverY = state.dronePos.y + Math.sin(time * 3) * 2.5;
-      const droneX = state.dronePos.x;
-      const droneY = hoverY;
-
-      // 2. Clear Screen
-      ctx.clearRect(0, 0, W, H);
-
-      // 3. Draw Tactical Radar Rings & HUD Grid
-      drawRadarHUD(ctx, W, H, droneX, droneY);
-
-      // 4. Draw Physical Obstacles in Environment
-      drawObstacles(ctx);
-
-      // 5. Cast 360° LiDAR Rays & Update Persistent Point Cloud
-      if (state.autoScan) {
-        const sweepSpeed = (state.values.frequency / 25) * 0.06;
-        state.scanAngle += sweepSpeed;
-        if (state.scanAngle > Math.PI * 2) state.scanAngle -= Math.PI * 2;
-        
-        // Sync knob if active mode is lidar
-        if (state.activeMode === 'lidar' && !state.isDragging) {
-          const deg = Math.round((state.scanAngle * 180) / Math.PI);
-          state.values.lidar = deg;
-          updateKnobDisplay(deg);
+    function render3D() {
+      // 1. Auto rotation if enabled
+      if (state.autoRotate && !state.isDraggingKnob && !state.isOrbitingCanvas) {
+        state.camYaw += 0.006;
+        const degYaw = Math.round(((state.camYaw % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2)) * (180 / Math.PI));
+        state.values.yaw = degYaw;
+        if (state.activeMode === 'yaw') {
+          updateKnobDisplay(degYaw);
         }
       }
 
-      castLidarRays(ctx, droneX, droneY, state.scanAngle);
+      // 2. Clear to Pure Pitch Black void
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(0, 0, W, H);
 
-      // 6. Draw Accumulated Point Cloud Returns
-      drawPointCloud(ctx);
+      // 3. Update Rotating 3D Laser Beam Sweep
+      state.beamAngle += state.sweepSpeed;
+      if (state.beamAngle > Math.PI * 2) state.beamAngle -= Math.PI * 2;
 
-      // 7. Draw The Flying Drone Chassis, Rotors & LiDAR Puck
-      drawFlyingDrone(ctx, droneX, droneY, time);
+      // Precompute camera trigonometry
+      const cosYaw = Math.cos(state.camYaw);
+      const sinYaw = Math.sin(state.camYaw);
+      const cosPitch = Math.cos(state.camPitch);
+      const sinPitch = Math.sin(state.camPitch);
 
-      requestAnimationFrame(renderLidar);
+      // 4. Project and Draw 3D Ground Grid (Pure Monochrome Lines)
+      draw3DGrid(ctx, W, H, focalLength, cosYaw, sinYaw, cosPitch, sinPitch, state.camDist);
+
+      // 5. Draw 3D LiDAR Laser Sweep Beam
+      draw3DScanBeam(ctx, W, H, focalLength, cosYaw, sinYaw, cosPitch, sinPitch, state.camDist, state.beamAngle);
+
+      // 6. Project & Draw Point Cloud
+      const maxPts = Math.min(state.points.length, state.values.density * 180);
+      draw3DPoints(ctx, W, H, focalLength, cosYaw, sinYaw, cosPitch, sinPitch, state.camDist, maxPts, state.beamAngle);
+
+      // 7. Tactical Black & White HUD Overlay
+      drawMonochromeHUD(ctx, W, H);
+
+      requestAnimationFrame(render3D);
     }
 
-    renderLidar();
+    render3D();
   }
 
-  function drawRadarHUD(ctx, W, H, cx, cy) {
+  /**
+   * Projects a 3D point (x, y, z) into 2D screen coordinates (sx, sy, depth)
+   */
+  function project3D(x, y, z, W, H, focalLength, cosYaw, sinYaw, cosPitch, sinPitch, camDist) {
+    // 1. Rotate around Y axis (Yaw)
+    const x1 = x * cosYaw - z * sinYaw;
+    const z1 = x * sinYaw + z * cosYaw;
+
+    // 2. Rotate around X axis (Pitch)
+    const y2 = y * cosPitch - z1 * sinPitch;
+    const z2 = y * sinPitch + z1 * cosPitch + camDist;
+
+    if (z2 <= 20) return null; // Behind camera plane
+
+    // 3. Perspective projection
+    const scale = focalLength / z2;
+    const sx = W / 2 + x1 * scale;
+    const sy = H / 2 + y2 * scale;
+
+    return { sx, sy, scale, z: z2 };
+  }
+
+  function draw3DGrid(ctx, W, H, focal, cosY, sinY, cosP, sinP, dist) {
     ctx.save();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.lineWidth = 0.8;
 
-    // Radar distance range rings
-    const radii = [45, 95, 155, 220];
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = 'rgba(75, 213, 238, 0.08)';
-    ctx.setLineDash([3, 5]);
+    const step = 40;
+    const limit = 160;
+    const groundY = 70;
 
-    radii.forEach((r, idx) => {
-      ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI * 2);
-      ctx.stroke();
+    // Grid lines along X
+    for (let x = -limit; x <= limit; x += step) {
+      const p1 = project3D(x, groundY, -limit, W, H, focal, cosY, sinY, cosP, sinP, dist);
+      const p2 = project3D(x, groundY, limit, W, H, focal, cosY, sinY, cosP, sinP, dist);
+      if (p1 && p2) {
+        ctx.beginPath();
+        ctx.moveTo(p1.sx, p1.sy);
+        ctx.lineTo(p2.sx, p2.sy);
+        ctx.stroke();
+      }
+    }
 
-      // Range text
-      ctx.fillStyle = 'rgba(75, 213, 238, 0.35)';
-      ctx.font = '9px "JetBrains Mono", monospace';
-      ctx.fillText(`${(idx + 1) * 5}m`, cx + r + 3, cy - 3);
-    });
-
-    // Crosshairs
-    ctx.setLineDash([2, 8]);
-    ctx.beginPath();
-    ctx.moveTo(cx, 0); ctx.lineTo(cx, H);
-    ctx.moveTo(0, cy); ctx.lineTo(W, cy);
-    ctx.stroke();
+    // Grid lines along Z
+    for (let z = -limit; z <= limit; z += step) {
+      const p1 = project3D(-limit, groundY, z, W, H, focal, cosY, sinY, cosP, sinP, dist);
+      const p2 = project3D(limit, groundY, z, W, H, focal, cosY, sinY, cosP, sinP, dist);
+      if (p1 && p2) {
+        ctx.beginPath();
+        ctx.moveTo(p1.sx, p1.sy);
+        ctx.lineTo(p2.sx, p2.sy);
+        ctx.stroke();
+      }
+    }
 
     ctx.restore();
   }
 
-  function drawObstacles(ctx) {
+  function draw3DScanBeam(ctx, W, H, focal, cosY, sinY, cosP, sinP, dist, beamAngle) {
+    const origin = project3D(0, -25, 0, W, H, focal, cosY, sinY, cosP, sinP, dist);
+    if (!origin) return;
+
     ctx.save();
-    OBSTACLES.forEach((obs) => {
-      ctx.fillStyle = 'rgba(28, 33, 48, 0.7)';
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+
+    // Active 3D Laser Fan Plane
+    const beamLen = 220;
+    const beamEnd1 = project3D(
+      Math.cos(beamAngle - 0.06) * beamLen,
+      -25 + Math.sin(beamAngle * 2) * 15,
+      Math.sin(beamAngle - 0.06) * beamLen,
+      W, H, focal, cosY, sinY, cosP, sinP, dist
+    );
+    const beamEnd2 = project3D(
+      Math.cos(beamAngle + 0.06) * beamLen,
+      70,
+      Math.sin(beamAngle + 0.06) * beamLen,
+      W, H, focal, cosY, sinY, cosP, sinP, dist
+    );
+
+    if (beamEnd1 && beamEnd2) {
+      // Laser triangle sweep fan (White luminescence)
+      ctx.beginPath();
+      ctx.moveTo(origin.sx, origin.sy);
+      ctx.lineTo(beamEnd1.sx, beamEnd1.sy);
+      ctx.lineTo(beamEnd2.sx, beamEnd2.sy);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+      ctx.fill();
+
+      // Sharp central laser line
+      ctx.beginPath();
+      ctx.moveTo(origin.sx, origin.sy);
+      ctx.lineTo((beamEnd1.sx + beamEnd2.sx) / 2, (beamEnd1.sy + beamEnd2.sy) / 2);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
       ctx.lineWidth = 1.2;
-
-      if (obs.type === 'box') {
-        ctx.beginPath();
-        ctx.roundRect(obs.x, obs.y, obs.w, obs.h, 4);
-        ctx.fill();
-        ctx.stroke();
-      } else if (obs.type === 'circle') {
-        ctx.beginPath();
-        ctx.arc(obs.x, obs.y, obs.r, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-      } else if (obs.type === 'wall') {
-        ctx.beginPath();
-        ctx.moveTo(obs.x1, obs.y1);
-        ctx.lineTo(obs.x2, obs.y2);
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-        ctx.lineWidth = 2;
-        ctx.stroke();
-      }
-    });
-    ctx.restore();
-  }
-
-  /**
-   * Casts dense optical laser rays outward and detects spatial surface hits
-   */
-  function castLidarRays(ctx, cx, cy, centerAngle) {
-    const numBeams = 32;
-    const fov = Math.PI * 0.45; // 80 deg active laser fan cone
-    const maxRange = 240;
-
-    ctx.save();
-
-    for (let i = 0; i < numBeams; i++) {
-      const angle = centerAngle - fov / 2 + (i / (numBeams - 1)) * fov;
-      const cosA = Math.cos(angle);
-      const sinA = Math.sin(angle);
-
-      let closestHitDist = maxRange;
-      let hitType = null;
-
-      // Ray-box and Ray-circle intersection tests
-      OBSTACLES.forEach((obs) => {
-        if (obs.type === 'box') {
-          const dist = rayIntersectsBox(cx, cy, cosA, sinA, obs.x, obs.y, obs.w, obs.h);
-          if (dist > 0 && dist < closestHitDist) {
-            closestHitDist = dist;
-            hitType = 'building';
-          }
-        } else if (obs.type === 'circle') {
-          const dist = rayIntersectsCircle(cx, cy, cosA, sinA, obs.x, obs.y, obs.r);
-          if (dist > 0 && dist < closestHitDist) {
-            closestHitDist = dist;
-            hitType = 'vegetation';
-          }
-        }
-      });
-
-      const hitX = cx + cosA * closestHitDist;
-      const hitY = cy + sinA * closestHitDist;
-
-      // Draw faint laser sweep beam
-      ctx.beginPath();
-      ctx.moveTo(cx, cy);
-      ctx.lineTo(hitX, hitY);
-      ctx.strokeStyle = `rgba(0, 229, 255, ${0.12 * (1 - closestHitDist / maxRange)})`;
-      ctx.lineWidth = 0.8;
       ctx.stroke();
-
-      // Record point cloud return if hit before max range
-      if (closestHitDist < maxRange - 5) {
-        state.pointCloud.push({
-          x: hitX + (Math.random() - 0.5) * 2,
-          y: hitY + (Math.random() - 0.5) * 2,
-          dist: closestHitDist,
-          life: 1.0,
-          decay: 0.012
-        });
-      }
     }
 
-    // Limit maximum point cloud memory
-    if (state.pointCloud.length > 320) {
-      state.pointCloud.splice(0, state.pointCloud.length - 320);
-    }
-
-    ctx.restore();
-  }
-
-  function rayIntersectsCircle(cx, cy, dx, dy, ox, oy, r) {
-    const fx = cx - ox;
-    const fy = cy - oy;
-    const a = dx * dx + dy * dy;
-    const b = 2 * (fx * dx + fy * dy);
-    const c = fx * fx + fy * fy - r * r;
-    const discriminant = b * b - 4 * a * c;
-
-    if (discriminant < 0) return -1;
-    const t = (-b - Math.sqrt(discriminant)) / (2 * a);
-    return t > 0 ? t : -1;
-  }
-
-  function rayIntersectsBox(cx, cy, dx, dy, bx, by, bw, bh) {
-    let tmin = 0;
-    let tmax = 500;
-
-    const invDx = dx !== 0 ? 1 / dx : 1e9;
-    const invDy = dy !== 0 ? 1 / dy : 1e9;
-
-    let t1 = (bx - cx) * invDx;
-    let t2 = (bx + bw - cx) * invDx;
-    if (t1 > t2) [t1, t2] = [t2, t1];
-    tmin = Math.max(tmin, t1);
-    tmax = Math.min(tmax, t2);
-    if (tmin > tmax) return -1;
-
-    t1 = (by - cy) * invDy;
-    t2 = (by + bh - cy) * invDy;
-    if (t1 > t2) [t1, t2] = [t2, t1];
-    tmin = Math.max(tmin, t1);
-    tmax = Math.min(tmax, t2);
-    if (tmin > tmax) return -1;
-
-    return tmin > 0 ? tmin : -1;
-  }
-
-  function drawPointCloud(ctx) {
-    ctx.save();
-    for (let i = state.pointCloud.length - 1; i >= 0; i--) {
-      const pt = state.pointCloud[i];
-      pt.life -= pt.decay;
-
-      if (pt.life <= 0) {
-        state.pointCloud.splice(i, 1);
-        continue;
-      }
-
-      // Point cloud elevation coloring (distance heatmap)
-      let color;
-      if (pt.dist < 60) color = `rgba(255, 68, 102, ${pt.life})`; // Red (dangerously close)
-      else if (pt.dist < 120) color = `rgba(245, 158, 11, ${pt.life})`; // Amber
-      else color = `rgba(0, 229, 255, ${pt.life * 0.9})`; // Cyan
-
-      ctx.fillStyle = color;
-      ctx.fillRect(pt.x - 1.2, pt.y - 1.2, 2.4, 2.4);
-    }
-    ctx.restore();
-  }
-
-  /**
-   * Draws the Quadcopter Drone with spinning rotors & center LiDAR puck
-   */
-  function drawFlyingDrone(ctx, x, y, time) {
-    const yawAngle = (state.values.yaw * Math.PI) / 180;
-    const armLength = 22;
-
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(yawAngle);
-
-    // 1. Carbon-Fiber X-Frame Arms
-    ctx.strokeStyle = '#1d2334';
-    ctx.lineWidth = 4;
-    ctx.lineCap = 'round';
-
+    // Central LiDAR Scanner Head Hub
     ctx.beginPath();
-    ctx.moveTo(-armLength, -armLength);
-    ctx.lineTo(armLength, armLength);
-    ctx.moveTo(-armLength, armLength);
-    ctx.lineTo(armLength, -armLength);
-    ctx.stroke();
-
-    // Subtle cyan accent stripes along arms
-    ctx.strokeStyle = 'rgba(75, 213, 238, 0.4)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    // 2. 4 Spinning Brushless Rotors
-    const rotorSpeed = time * 24;
-    const rotorOffsets = [
-      { rx: -armLength, ry: -armLength },
-      { rx: armLength, ry: -armLength },
-      { rx: -armLength, ry: armLength },
-      { rx: armLength, ry: armLength }
-    ];
-
-    rotorOffsets.forEach((pos, idx) => {
-      // Motor Bell
-      ctx.beginPath();
-      ctx.arc(pos.rx, pos.ry, 4, 0, Math.PI * 2);
-      ctx.fillStyle = '#0a0d16';
-      ctx.fill();
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 1;
-      ctx.stroke();
-
-      // Spinning Propeller Disc (Translucent Blur)
-      ctx.beginPath();
-      ctx.arc(pos.rx, pos.ry, 12, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(0, 229, 255, 0.12)';
-      ctx.fill();
-      ctx.strokeStyle = 'rgba(0, 229, 255, 0.35)';
-      ctx.setLineDash([2, 4]);
-      ctx.stroke();
-      ctx.setLineDash([]);
-    });
-
-    // 3. Central Drone Avionics Pod
-    ctx.beginPath();
-    ctx.roundRect(-10, -12, 20, 24, 5);
-    ctx.fillStyle = '#111522';
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
-    // 4. Rotating LiDAR Optical Sensor Puck
-    ctx.beginPath();
-    ctx.arc(0, 0, 7, 0, Math.PI * 2);
-    ctx.fillStyle = '#06b6d4';
-    ctx.shadowColor = '#00e5ff';
-    ctx.shadowBlur = 12;
-    ctx.fill();
-    ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-
-    // Laser diode emitter dot
-    const puckEmitterAngle = state.scanAngle - yawAngle;
-    ctx.beginPath();
-    ctx.arc(Math.cos(puckEmitterAngle) * 5, Math.sin(puckEmitterAngle) * 5, 2, 0, Math.PI * 2);
+    ctx.arc(origin.sx, origin.sy, 4 * origin.scale, 0, Math.PI * 2);
     ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = '#ffffff';
+    ctx.shadowBlur = 10;
     ctx.fill();
 
-    // 5. Blinking Flight Beacon LED (Green & Red Aviation Lights)
-    const blink = Math.sin(time * 6) > 0;
-    ctx.beginPath();
-    ctx.arc(armLength, -armLength, 2, 0, Math.PI * 2);
-    ctx.fillStyle = blink ? '#22c55e' : 'rgba(34, 197, 94, 0.2)';
-    ctx.fill();
+    ctx.restore();
+  }
 
-    ctx.beginPath();
-    ctx.arc(-armLength, -armLength, 2, 0, Math.PI * 2);
-    ctx.fillStyle = blink ? '#ef4444' : 'rgba(239, 68, 68, 0.2)';
-    ctx.fill();
+  function draw3DPoints(ctx, W, H, focal, cosY, sinY, cosP, sinP, dist, maxPts, beamAngle) {
+    ctx.save();
+
+    for (let i = 0; i < maxPts; i++) {
+      const pt = state.points[i];
+      const p = project3D(pt.x, pt.y, pt.z, W, H, focal, cosY, sinY, cosP, sinP, dist);
+      if (!p) continue;
+
+      // Angular proximity to laser sweep for active scan flash
+      const ptAngle = Math.atan2(pt.z, pt.x);
+      const angleDiff = Math.abs(((beamAngle - ptAngle + Math.PI * 3) % (Math.PI * 2)) - Math.PI);
+      if (angleDiff < 0.12) {
+        pt.hitTime = 1.0; // Flash bright white on laser contact
+      } else {
+        pt.hitTime = Math.max(0, pt.hitTime - 0.025);
+      }
+
+      // Depth Falloff: close = bright white (1.0), distant = muted gray (0.2)
+      const depthRatio = Math.max(0, Math.min(1, 1 - (p.z - 120) / 480));
+      const baseAlpha = (0.2 + depthRatio * 0.7) * pt.intensity;
+      const hitBonus = pt.hitTime * 0.45;
+      const alpha = Math.min(1.0, baseAlpha + hitBonus);
+
+      // Point size based on perspective scale & laser hit
+      const ptSize = Math.max(1.1, (1.2 + hitBonus * 1.5) * p.scale);
+
+      // Render Crisp Black & White Point
+      ctx.fillStyle = pt.hitTime > 0.5 ? '#ffffff' : `rgba(255, 255, 255, ${alpha})`;
+      ctx.fillRect(p.sx - ptSize / 2, p.sy - ptSize / 2, ptSize, ptSize);
+
+      // Soft white halo for actively illuminated points
+      if (pt.hitTime > 0.6) {
+        ctx.beginPath();
+        ctx.arc(p.sx, p.sy, ptSize * 2.2, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${pt.hitTime * 0.35})`;
+        ctx.fill();
+      }
+    }
+
+    ctx.restore();
+  }
+
+  function drawMonochromeHUD(ctx, W, H) {
+    ctx.save();
+    ctx.font = '10px "JetBrains Mono", monospace';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+
+    // Coordinate axis indicator (Bottom Left)
+    const axX = 36;
+    const axY = H - 36;
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.lineWidth = 1;
+
+    // X axis
+    ctx.beginPath(); ctx.moveTo(axX, axY); ctx.lineTo(axX + 22, axY); ctx.stroke();
+    ctx.fillText('X', axX + 26, axY + 3);
+
+    // Y axis
+    ctx.beginPath(); ctx.moveTo(axX, axY); ctx.lineTo(axX, axY - 22); ctx.stroke();
+    ctx.fillText('Z', axX - 4, axY - 26);
+
+    // Scan Status
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+    ctx.fillText('3D MONOCHROME LIDAR [D800 PROJECTION]', 14, 22);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+    ctx.fillText('DRAG CANVAS TO ORBIT 3D PERSPECTIVE', 14, 36);
 
     ctx.restore();
   }

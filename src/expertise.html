@@ -193,88 +193,88 @@
 
       </div>
 
-      <!-- ═══ INTERACTIVE AUTONOMOUS DRONE & 360° LIDAR LAB ══════════════════ -->
+      <!-- ═══ INTERACTIVE 3D LIDAR POINT CLOUD SCANNER (BLACK & WHITE) ══════════════════ -->
       <div class="robotics-lab-section animate-fade">
-        <div class="robotics-lab-card">
+        <div class="robotics-lab-card monochrome-card">
           <div class="robotics-lab-header">
-            <h2 class="robotics-lab-title">Autonomous Drone Flight &amp; 360° LiDAR Spatial Scanner</h2>
+            <h2 class="robotics-lab-title">3D LiDAR Point Cloud Spatial Scanner</h2>
             <p class="robotics-lab-desc">
-              Robotics meets high-rate spatial raycasting. Rotate the precision 72-tick rotary encoder below to manipulate the 360° LiDAR laser azimuth, command drone hover altitude, and map real-time point-cloud returns against urban obstacles.
+              Spatial depth sensing inspired by DIY 3D LiDAR (D800). Rotate the 72-tick rotary encoder or drag directly on the 3D canvas to orbit through thousands of real-time laser point cloud returns in pure monochrome black and white.
             </p>
           </div>
 
           <div class="robotics-lab-grid">
             <!-- Left: Precision Rotary Knob Slider -->
-            <div class="knob-controller-card">
-              <!-- LiDAR & Drone Mode Selector Pills -->
+            <div class="knob-controller-card monochrome-knob-card">
+              <!-- LiDAR 3D Mode Selector Pills -->
               <div class="knob-joint-selector">
-                <button type="button" class="joint-pill active" data-joint="lidar">LiDAR Azimuth (0-360°)</button>
-                <button type="button" class="joint-pill" data-joint="altitude">Altitude (0-60m)</button>
-                <button type="button" class="joint-pill" data-joint="yaw">Heading (0-360°)</button>
-                <button type="button" class="joint-pill" data-joint="frequency">Pulse Rate (10-50Hz)</button>
+                <button type="button" class="joint-pill active" data-joint="yaw">3D Orbit Yaw (0-360°)</button>
+                <button type="button" class="joint-pill" data-joint="pitch">LiDAR Pitch (±45°)</button>
+                <button type="button" class="joint-pill" data-joint="density">Point Density (1-20k)</button>
+                <button type="button" class="joint-pill" data-joint="zoom">Sensor Range (5-50m)</button>
               </div>
 
               <!-- Rotary Knob Dial -->
               <div class="knob-wrapper">
-                <div class="knob-slider" id="robotics-knob" data-min="0" data-max="360" data-value="120">
+                <div class="knob-slider monochrome-knob" id="robotics-knob" data-min="0" data-max="360" data-value="135">
                   <!-- 72 Tick Ring -->
                   <svg viewBox="0 0 100 100" class="knob-ticks-svg" id="knob-ticks-svg"></svg>
 
                   <!-- Rotating Pointer Arrow -->
                   <div class="knob-arrow-wrap" id="knob-arrow">
-                    <div class="knob-arrow-pointer"></div>
+                    <div class="knob-arrow-pointer monochrome-arrow"></div>
                   </div>
 
                   <!-- Inner Rotary Disk with Sliding Number Counter -->
-                  <div class="knob-inner-disk">
+                  <div class="knob-inner-disk monochrome-disk">
                     <div class="knob-inner-border"></div>
                     <div class="sliding-number-container font-mono" id="knob-sliding-number">
                       <!-- Digits generated dynamically with slot animation -->
                     </div>
-                    <span class="knob-unit-label font-mono" id="knob-unit-label">AZIMUTH (°)</span>
+                    <span class="knob-unit-label font-mono" id="knob-unit-label">YAW (°)</span>
                   </div>
                 </div>
               </div>
 
               <!-- Knob Quick Preset Buttons -->
               <div class="knob-presets-toolbar">
-                <button type="button" class="knob-preset-btn" data-angle="45">45° Sector</button>
-                <button type="button" class="knob-preset-btn active" data-angle="120">120° Sweep</button>
-                <button type="button" class="knob-preset-btn" data-angle="240">240° Wide</button>
-                <button type="button" class="knob-preset-btn" data-angle="360">360° Omni</button>
+                <button type="button" class="knob-preset-btn" data-angle="45">45° Isometric</button>
+                <button type="button" class="knob-preset-btn active" data-angle="135">135° Perspective</button>
+                <button type="button" class="knob-preset-btn" data-angle="225">225° Profile</button>
+                <button type="button" class="knob-preset-btn" data-angle="360">360° Frontal</button>
                 <button type="button" class="knob-auto-btn active" id="knob-auto-cycle-btn">
                   <i data-lucide="pause" id="knob-cycle-icon"></i>
-                  <span>Auto Scan</span>
+                  <span>Auto Orbit</span>
                 </button>
               </div>
             </div>
 
-            <!-- Right: Live Drone & LiDAR Radar Canvas & Point Cloud Dashboard -->
-            <div class="robotics-visualizer-card">
-              <div class="robot-canvas-wrapper">
+            <!-- Right: Live 3D LiDAR Point Cloud Canvas & Telemetry Dashboard -->
+            <div class="robotics-visualizer-card monochrome-visualizer">
+              <div class="robot-canvas-wrapper monochrome-canvas-box">
                 <canvas id="robot-arm-canvas" width="480" height="280"></canvas>
-                <div class="robot-coords-badge font-mono" id="robot-coords-badge">
-                  POINT CLOUD: 320 RETURNS | STATUS: ACTIVE SCAN
+                <div class="robot-coords-badge font-mono monochrome-badge" id="robot-coords-badge">
+                  3D LIDAR: 3,200 POINTS | SCANNER: 360° ACTIVE
                 </div>
               </div>
 
               <!-- Live Kinematics & LiDAR Telemetry Readout -->
               <div class="robotics-telemetry-grid font-mono">
-                <div class="telemetry-stat">
-                  <span class="stat-name">LASER AZIMUTH</span>
-                  <span class="stat-val text-cyan" id="stat-angle">120° AZIMUTH</span>
+                <div class="telemetry-stat monochrome-stat">
+                  <span class="stat-name">ORBIT AZIMUTH</span>
+                  <span class="stat-val text-white" id="stat-angle">135° AZIMUTH</span>
                 </div>
-                <div class="telemetry-stat">
-                  <span class="stat-name">POINT CLOUD RATE</span>
-                  <span class="stat-val text-violet" id="stat-torque">18,000 PTS/SEC</span>
+                <div class="telemetry-stat monochrome-stat">
+                  <span class="stat-name">POINT CLOUD RETURNS</span>
+                  <span class="stat-val text-white" id="stat-torque">3,200 CLOUD PTS</span>
                 </div>
-                <div class="telemetry-stat">
-                  <span class="stat-name">DRONE ALTITUDE (AGL)</span>
-                  <span class="stat-val text-emerald" id="stat-pid">18.0m AGL (±0.02m TOF)</span>
+                <div class="telemetry-stat monochrome-stat">
+                  <span class="stat-name">ELEVATION PITCH</span>
+                  <span class="stat-val text-white" id="stat-pid">PITCH: 18° (3D TOF)</span>
                 </div>
-                <div class="telemetry-stat">
-                  <span class="stat-name">FLIGHT HEADING / YAW</span>
-                  <span class="stat-val text-amber" id="stat-current">45° COMPASS HDG</span>
+                <div class="telemetry-stat monochrome-stat">
+                  <span class="stat-name">SENSOR RANGE FOV</span>
+                  <span class="stat-val text-white" id="stat-current">RANGE: 24.0m FOV</span>
                 </div>
               </div>
             </div>
