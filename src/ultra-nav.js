@@ -9,8 +9,7 @@
 (function () {
   'use strict';
 
-  // 1. Hard Reset & Page Refresh Redirection Protocol
-  // Intercept Shift+R for hard reset and page reload to immediately redirect to start of home page
+  // 1. Hard Reset Protocol (Only on explicit Shift+R)
   window.addEventListener('keydown', function (e) {
     if (e.shiftKey && (e.key === 'R' || e.key === 'r')) {
       e.preventDefault();
@@ -19,26 +18,6 @@
       window.location.href = '/index.html?reset=true';
     }
   });
-
-  try {
-    const navEntries = performance.getEntriesByType && performance.getEntriesByType('navigation');
-    const isReload = (navEntries && navEntries[0] && navEntries[0].type === 'reload') ||
-                     (window.performance && window.performance.navigation && window.performance.navigation.type === 1);
-    if (isReload) {
-      const pathname = window.location.pathname;
-      const isInnerPage = !pathname.endsWith('index.html') && pathname !== '/' && pathname !== '';
-      if (isInnerPage) {
-        sessionStorage.setItem('portfolio_hard_reset', 'true');
-        window.location.replace('/index.html?reset=true');
-        return;
-      } else {
-        sessionStorage.setItem('portfolio_hard_reset', 'true');
-        window.scrollTo(0, 0);
-      }
-    }
-  } catch (err) {
-    // Navigation timing fallback
-  }
 
   // 2. Permanently lock theme to Pitch Black Dark Mode (#000000)
   document.documentElement.setAttribute('data-theme', 'dark');
