@@ -12,18 +12,16 @@
     if (!revealCards.length && !videos.length) return;
     let hasEngagedAudio = false;
 
-    // 1. Initial visual slide-up for Section 1 after brief intro pause
+    // 1. Initial visual slide-up for Section 1 immediately
     if (revealCards.length > 0) {
-      setTimeout(() => {
-        revealCards[0].classList.add('is-revealed');
-      }, 200);
+      revealCards[0].classList.add('is-revealed');
     }
 
     // 2. IntersectionObserver for Bi-directional Slide-Up on Scroll
     const observerOptions = {
       root: null,
-      rootMargin: '-2% 0px -4% 0px',
-      threshold: 0.08
+      rootMargin: '20px 0px 20px 0px',
+      threshold: 0.02
     };
 
     const revealObserver = new IntersectionObserver((entries) => {
@@ -45,6 +43,10 @@
             }
           }
         } else {
+          // Do not un-reveal section 1 if at top of page
+          if (entry.target === revealCards[0] && window.scrollY < 120) {
+            return;
+          }
           entry.target.classList.remove('is-revealed');
         }
       });
