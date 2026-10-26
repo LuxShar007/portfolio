@@ -10,7 +10,6 @@
     const revealCards = document.querySelectorAll('.slide-up-reveal');
     const videos = document.querySelectorAll('.showcase-video');
     if (!revealCards.length && !videos.length) return;
-    let hasEngagedAudio = false;
 
     // 1. Initial visual slide-up for Section 1 immediately
     if (revealCards.length > 0) {
@@ -34,14 +33,6 @@
           if (video && video.paused) {
             video.play().catch(() => {});
           }
-
-          // Trigger Slushii audio on first scroll past section 1
-          if (!hasEngagedAudio && entry.target !== revealCards[0]) {
-            hasEngagedAudio = true;
-            if (window.UltraAudio && !window.UltraAudio.isPlaying) {
-              window.UltraAudio.playFrom40s();
-            }
-          }
         }
       });
     }, observerOptions);
@@ -50,24 +41,7 @@
       revealObserver.observe(card);
     });
 
-    // 3. User interaction audio trigger
-    const onFirstUserScroll = () => {
-      if (!hasEngagedAudio) {
-        hasEngagedAudio = true;
-        if (window.UltraAudio && !window.UltraAudio.isPlaying) {
-          window.UltraAudio.playFrom40s();
-        }
-      }
-      window.removeEventListener('scroll', onFirstUserScroll);
-      window.removeEventListener('wheel', onFirstUserScroll);
-      window.removeEventListener('touchmove', onFirstUserScroll);
-    };
-
-    window.addEventListener('scroll', onFirstUserScroll, { passive: true });
-    window.addEventListener('wheel', onFirstUserScroll, { passive: true });
-    window.addEventListener('touchmove', onFirstUserScroll, { passive: true });
-
-    // 4. Ensure all videos loop and play seamlessly
+    // 3. Ensure all videos loop and play seamlessly
     videos.forEach((vid) => {
       vid.play().catch(() => {
         vid.muted = true;
