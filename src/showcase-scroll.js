@@ -42,12 +42,6 @@
               window.UltraAudio.playFrom40s();
             }
           }
-        } else {
-          // Do not un-reveal section 1 if at top of page
-          if (entry.target === revealCards[0] && window.scrollY < 120) {
-            return;
-          }
-          entry.target.classList.remove('is-revealed');
         }
       });
     }, observerOptions);
