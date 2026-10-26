@@ -484,7 +484,6 @@
       // Page-specific module lifecycles
       if (targetPath === 'index.html') {
         if (typeof window.initShowcaseScroll === 'function') window.initShowcaseScroll();
-        if (typeof window.startHackMap === 'function') window.startHackMap();
       } else if (targetPath === 'expertise.html') {
         if (typeof window.init3DLidarLab === 'function') window.init3DLidarLab();
         if (typeof window.initAdaptiveSlider === 'function') window.initAdaptiveSlider();
