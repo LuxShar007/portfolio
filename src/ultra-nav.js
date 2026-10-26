@@ -26,7 +26,8 @@
   // 4. Sequential Previous / Next Page Flow Navigator on Inner Pages
   function buildPageFlowNav() {
     const pathname = window.location.pathname;
-    const page = pathname.substring(pathname.lastIndexOf('/') + 1) || 'index.html';
+    let page = pathname.substring(pathname.lastIndexOf('/') + 1) || 'index.html';
+    if (!page.includes('.')) page += '.html';
 
     // Only inject on inner pages, not homepage
     if (page === '' || page === 'index.html') return;
@@ -78,7 +79,8 @@
   window.addEventListener('keydown', (e) => {
     if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
     const pathname = window.location.pathname;
-    const page = pathname.substring(pathname.lastIndexOf('/') + 1) || 'index.html';
+    let page = pathname.substring(pathname.lastIndexOf('/') + 1) || 'index.html';
+    if (!page.includes('.')) page += '.html';
     if (page === '' || page === 'index.html') return;
 
     const pageSequence = [

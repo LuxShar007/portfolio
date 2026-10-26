@@ -16,11 +16,11 @@
       revealCards[0].classList.add('is-revealed');
     }
 
-    // 2. IntersectionObserver for Bi-directional Slide-Up on Scroll
+    // 2. IntersectionObserver for Bi-directional Slide-Up on Scroll (Up and Down)
     const observerOptions = {
       root: null,
-      rootMargin: '20px 0px 20px 0px',
-      threshold: 0.02
+      rootMargin: '0px 0px -8% 0px',
+      threshold: 0.1
     };
 
     const revealObserver = new IntersectionObserver((entries) => {
@@ -33,6 +33,12 @@
           if (video && video.paused) {
             video.play().catch(() => {});
           }
+        } else {
+          // Do not un-reveal section 1 if at top of page
+          if (entry.target === revealCards[0] && window.scrollY < 120) {
+            return;
+          }
+          entry.target.classList.remove('is-revealed');
         }
       });
     }, observerOptions);
