@@ -11,16 +11,18 @@
     const videos = document.querySelectorAll('.showcase-video');
     if (!revealCards.length && !videos.length) return;
 
-    // 1. Initial visual slide-up for Section 1 immediately
-    if (revealCards.length > 0) {
-      revealCards[0].classList.add('is-revealed');
-    }
+    // 1. Initial entrance slide-up for Position 1 ("Sharvin Mhatre") & scroll cue
+    // Allow the initial unrevealed translateY/opacity to paint, then trigger the upward slide
+    setTimeout(() => {
+      const pos1Elements = document.querySelectorAll('#pos-1 .slide-up-reveal');
+      pos1Elements.forEach((el) => el.classList.add('is-revealed'));
+    }, 70);
 
     // 2. IntersectionObserver for Bi-directional Slide-Up on Scroll (Up and Down)
     const observerOptions = {
       root: null,
-      rootMargin: '0px 0px -8% 0px',
-      threshold: 0.1
+      rootMargin: '0px 0px -5% 0px',
+      threshold: 0.08
     };
 
     const revealObserver = new IntersectionObserver((entries) => {
@@ -34,8 +36,10 @@
             video.play().catch(() => {});
           }
         } else {
-          // Do not un-reveal section 1 if at top of page
-          if (entry.target === revealCards[0] && window.scrollY < 120) {
+          // When scrolling away (either down or up), un-reveal the element so that
+          // whenever the user scrolls back, it triggers the smooth slide-up effect again!
+          // Only stay revealed if resting at the very top of the page (< 80px) for pos-1
+          if (entry.target.closest('#pos-1') && window.scrollY < 80) {
             return;
           }
           entry.target.classList.remove('is-revealed');
