@@ -12,17 +12,20 @@
   <meta property="og:type" content="website">
   
   <!-- High-Priority Resource Preloads -->
-  <link rel="preload" href="styles.css?v=9" as="style">
-  <link rel="preload" href="ultra-nav.js?v=9" as="script">
-  <link rel="preload" href="showcase-scroll.js?v=9" as="script">
+  <link rel="preload" href="styles.css?v=10" as="style">
+  <link rel="preload" href="ultra-nav.js?v=10" as="script">
+  <link rel="preload" href="showcase-scroll.js?v=10" as="script">
 
   <!-- Google Fonts Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  
+  <!-- Devicon CDN for tech logos -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
   
   <!-- CSS Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=9">
+  <link rel="stylesheet" href="styles.css?v=10">
   
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -34,12 +37,23 @@
   <div class="custom-cursor-dot" id="custom-cursor-dot"></div>
 
   <!-- ╔═════════════════════════════════════════════════════════════════╗
-       ║  4-VIDEO SHOWCASE NORMAL SCROLL CONTAINER                       ║
-       ║  Slide-up popup animation on scroll down for more content       ║
+       ║  FLOATING GLASS NAVIGATION DOCK                                 ║
+       ╚═════════════════════════════════════════════════════════════════╝ -->
+  <nav class="floating-glass-dock" id="floating-dock">
+    <a href="#pos-1" class="dock-item active" data-nav="pos-1"><i data-lucide="home"></i> <span>Home</span></a>
+    <a href="#about" class="dock-item" data-nav="about"><i data-lucide="user"></i> <span>About</span></a>
+    <a href="#expertise" class="dock-item" data-nav="expertise"><i data-lucide="cpu"></i> <span>Expertise &amp; Labs</span></a>
+    <a href="#projects" class="dock-item" data-nav="projects"><i data-lucide="folder-git-2"></i> <span>Projects</span></a>
+    <a href="#milestones" class="dock-item" data-nav="milestones"><i data-lucide="trophy"></i> <span>Milestones</span></a>
+    <a href="#connect" class="dock-item" data-nav="connect"><i data-lucide="terminal"></i> <span>Connect</span></a>
+  </nav>
+
+  <!-- ╔═════════════════════════════════════════════════════════════════╗
+       ║  MAIN UNIFIED SCROLL CONTAINER (OPTION A)                       ║
        ╚═════════════════════════════════════════════════════════════════╝ -->
   <main class="showcase-scroll-container" id="showcase-container">
 
-    <!-- POSITION 1: Sharvin Mhatre (Website 1) -->
+    <!-- ── POSITION 1: Sharvin Mhatre (Website 1) ──────────────── -->
     <section class="showcase-section" id="pos-1">
       <div class="showcase-video-card slide-up-reveal is-revealed">
         <video 
@@ -61,7 +75,7 @@
       </div>
     </section>
 
-    <!-- POSITION 2: Dedicated Robotics Enthusiast (Website 2) -->
+    <!-- ── POSITION 2: Dedicated Robotics Enthusiast (Website 2) ── -->
     <section class="showcase-section" id="pos-2">
       <div class="showcase-video-card slide-up-reveal is-revealed">
         <video 
@@ -77,7 +91,7 @@
       </div>
     </section>
 
-    <!-- POSITION 3: Quote by Sebastian Metal (Website 3) -->
+    <!-- ── POSITION 3: Quote by Sebastian Metal (Website 3) ─────── -->
     <section class="showcase-section" id="pos-3">
       <div class="showcase-video-card slide-up-reveal is-revealed">
         <video 
@@ -93,9 +107,9 @@
       </div>
     </section>
 
-    <!-- POSITION 4: Browse Website with Arrow (Website 4) -->
+    <!-- ── POSITION 4: Browse Website (Website 4) ───────────────── -->
     <section class="showcase-section" id="pos-4">
-      <a href="about.html" class="showcase-video-card slide-up-reveal is-revealed" title="Click to Browse Portfolio (Starts with About Me)" style="text-decoration: none; cursor: pointer;">
+      <a href="#about" class="showcase-video-card slide-up-reveal is-revealed" title="Click to Explore Full Portfolio" style="text-decoration: none; cursor: pointer;">
         <video 
           class="showcase-video" 
           src="/assets/media/video/Website_4.mp4" 
@@ -110,47 +124,801 @@
 
       <!-- Quick Browse Destination Chips -->
       <div class="browse-destinations-grid slide-up-reveal">
-        <a href="about.html" class="browse-chip">
+        <a href="#about" class="browse-chip">
           <span class="chip-num">01</span>
           <span class="chip-label">About Me</span>
-          <span class="chip-arrow">→</span>
+          <span class="chip-arrow">↓</span>
         </a>
-        <a href="expertise.html" class="browse-chip">
+        <a href="#expertise" class="browse-chip">
           <span class="chip-num">02</span>
-          <span class="chip-label">Expertise</span>
-          <span class="chip-arrow">→</span>
+          <span class="chip-label">Expertise &amp; Labs</span>
+          <span class="chip-arrow">↓</span>
         </a>
-        <a href="milestones.html" class="browse-chip">
+        <a href="#projects" class="browse-chip">
           <span class="chip-num">03</span>
-          <span class="chip-label">Milestones</span>
-          <span class="chip-arrow">→</span>
-        </a>
-        <a href="projects.html" class="browse-chip">
-          <span class="chip-num">04</span>
           <span class="chip-label">Projects</span>
-          <span class="chip-arrow">→</span>
+          <span class="chip-arrow">↓</span>
         </a>
-        <a href="connect.html" class="browse-chip">
+        <a href="#milestones" class="browse-chip">
+          <span class="chip-num">04</span>
+          <span class="chip-label">Milestones</span>
+          <span class="chip-arrow">↓</span>
+        </a>
+        <a href="#connect" class="browse-chip">
           <span class="chip-num">05</span>
           <span class="chip-label">Connect</span>
-          <span class="chip-arrow">→</span>
+          <span class="chip-arrow">↓</span>
         </a>
+      </div>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════════════
+         SECTION 1: ABOUT ME & EDUCATION
+         ═════════════════════════════════════════════════════════════ -->
+    <section class="section-container" id="about" style="padding-top: 100px; padding-bottom: 80px; max-width: 1100px; margin: 0 auto; width: 92%;">
+      <div class="section-header">
+        <div class="page-header-video-wrapper">
+          <video class="page-header-video" src="/assets/media/video/Website_5.mp4" autoplay loop muted playsinline preload="auto"></video>
+        </div>
+        <p class="section-desc animate-fade">Dedicated Robotics Enthusiast &amp; Full Stack Web Developer.</p>
+      </div>
+
+      <div class="animate-fade" style="display: flex; flex-direction: column; gap: 32px;">
+        <p style="font-size: 1.15rem; line-height: 1.8; color: var(--text-secondary); font-weight: 300;">
+          A passionate 19-year-old engineer with a deep interest in building impactful software systems, GPU-accelerated computing, and AI-powered applications. Driven by a relentless curiosity and a desire to push what's technically possible.
+        </p>
+
+        <!-- SIES GST Card -->
+        <div class="glass-card" style="padding: 32px; border-radius: 20px;">
+          <h3 style="font-size: 1.35rem; margin-bottom: 12px; color: var(--accent-cyan);">SIES Graduate School of Technology</h3>
+          <p style="color: var(--text-secondary); font-weight: 300; line-height: 1.7; font-size: 1rem;">
+            Pursuing Bachelor of Engineering in Electronics and Computer Science at Navi Mumbai, India. Focusing on microcontrollers, device isolation circuits, spatial logic models, and GPU acceleration scripts.
+          </p>
+        </div>
+
+        <p style="font-size: 1.05rem; line-height: 1.8; color: var(--text-secondary); font-weight: 300;">
+          My long-term aspirations include serving in the <strong>Technical Branch of the Indian Air Force</strong> and building systems that make a meaningful impact at scale.
+        </p>
+      </div>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════════════
+         SECTION 2: TECHNICAL EXPERTISE & INTERACTIVE LABS
+         ═════════════════════════════════════════════════════════════ -->
+    <section class="section-container" id="expertise" style="padding-top: 100px; padding-bottom: 80px; max-width: 1200px; margin: 0 auto; width: 92%;">
+      <div class="section-header">
+        <div class="page-header-video-wrapper">
+          <video class="page-header-video" src="/assets/media/video/Website_6.mp4" autoplay loop muted playsinline preload="auto"></video>
+        </div>
+        <p class="section-desc animate-fade">Organized capabilities framework presenting the EDA tools, languages, and GPU compute packages used across my hardware and software projects.</p>
+      </div>
+
+      <!-- Capabilities Grid -->
+      <div class="capabilities-grid animate-fade">
+        <!-- Card 1: Hardware & EDA Software -->
+        <div class="capability-card">
+          <div class="card-glow"></div>
+          <div class="card-border"></div>
+          <div class="card-content">
+            <div class="card-icon">
+              <i data-lucide="cpu" class="icon-cyan"></i>
+            </div>
+            <h3 class="card-title">Hardware &amp; Robotics Software</h3>
+            <p class="card-desc">
+              Designing embedded circuitry boards, power management layouts, and robotics nodes using industry-standard EDA tools and middleware.
+            </p>
+            <div style="border-top: 1px solid var(--border-color); padding-top: 20px;">
+              <span class="font-mono text-cyan" style="font-size: 0.8rem; letter-spacing: 1px;">ROBOTICS &amp; EDA:</span>
+              <div class="tech-badges-grid">
+                <div class="tech-badge">
+                  <img src="https://cdn.simpleicons.org/kicad/314CB0" alt="KiCad" style="width: 2rem; height: 2rem;">
+                  <span class="tech-badge-name">KiCad</span>
+                </div>
+                <div class="tech-badge">
+                  <i class="devicon-ros-original colored"></i>
+                  <span class="tech-badge-name">ROS2</span>
+                </div>
+                <div class="tech-badge">
+                  <i class="devicon-arduino-plain colored"></i>
+                  <span class="tech-badge-name">Arduino IDE</span>
+                </div>
+                <div class="tech-badge">
+                  <div class="custom-tech-icon ltspice-icon">LT</div>
+                  <span class="tech-badge-name">LTspice</span>
+                </div>
+                <div class="tech-badge">
+                  <div class="custom-tech-icon autocad-icon">AC</div>
+                  <span class="tech-badge-name">AutoCAD</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Software Development -->
+        <div class="capability-card">
+          <div class="card-glow"></div>
+          <div class="card-border"></div>
+          <div class="card-content">
+            <div class="card-icon">
+              <i data-lucide="code-2" class="icon-purple"></i>
+            </div>
+            <h3 class="card-title">Software Development</h3>
+            <p class="card-desc">
+              Building full-stack server loops, relational databases, responsive frontends, and dynamic device telemetry links.
+            </p>
+            <div style="border-top: 1px solid var(--border-color); padding-top: 20px;">
+              <span class="font-mono text-violet" style="font-size: 0.8rem; letter-spacing: 1px;">LANGUAGES &amp; WEB TECH:</span>
+              <div class="tech-badges-grid">
+                <div class="tech-badge"><i class="devicon-java-plain colored"></i><span class="tech-badge-name">Java</span></div>
+                <div class="tech-badge"><i class="devicon-cplusplus-plain colored"></i><span class="tech-badge-name">C++</span></div>
+                <div class="tech-badge"><i class="devicon-python-plain colored"></i><span class="tech-badge-name">Python</span></div>
+                <div class="tech-badge"><i class="devicon-javascript-plain colored"></i><span class="tech-badge-name">JavaScript</span></div>
+                <div class="tech-badge"><i class="devicon-html5-plain colored"></i><span class="tech-badge-name">HTML5</span></div>
+                <div class="tech-badge"><i class="devicon-css3-plain colored"></i><span class="tech-badge-name">CSS3</span></div>
+                <div class="tech-badge"><i class="devicon-react-original colored"></i><span class="tech-badge-name">React</span></div>
+                <div class="tech-badge"><i class="devicon-nodejs-plain colored"></i><span class="tech-badge-name">Node.js</span></div>
+                <div class="tech-badge"><i class="devicon-express-original"></i><span class="tech-badge-name">Express</span></div>
+                <div class="tech-badge"><i class="devicon-axios-plain colored"></i><span class="tech-badge-name">Axios</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3: AI & GPU Parallel Computing -->
+        <div class="capability-card">
+          <div class="card-glow"></div>
+          <div class="card-border"></div>
+          <div class="card-content">
+            <div class="card-icon">
+              <i data-lucide="terminal" class="icon-magenta"></i>
+            </div>
+            <h3 class="card-title">AI &amp; GPU Parallel Computing</h3>
+            <p class="card-desc">
+              Accelerating multi-agent spatial queries, distance grids, and neural inference loops using parallel compilation stacks.
+            </p>
+            <div style="border-top: 1px solid var(--border-color); padding-top: 20px;">
+              <span class="font-mono text-magenta" style="font-size: 0.8rem; letter-spacing: 1px;">COMPUTE KERNELS &amp; ML:</span>
+              <div class="tech-badges-grid">
+                <div class="tech-badge">
+                  <img src="https://cdn.simpleicons.org/nvidia/76B900" alt="Nvidia" style="width: 2rem; height: 2rem;">
+                  <span class="tech-badge-name">Nvidia CUDA</span>
+                </div>
+                <div class="tech-badge"><i class="devicon-pytorch-original colored"></i><span class="tech-badge-name">PyTorch</span></div>
+                <div class="tech-badge"><i class="devicon-tensorflow-original colored"></i><span class="tech-badge-name">TensorFlow</span></div>
+                <div class="tech-badge"><i class="devicon-pandas-plain colored"></i><span class="tech-badge-name">Pandas</span></div>
+                <div class="tech-badge"><i class="devicon-numpy-plain colored"></i><span class="tech-badge-name">NumPy</span></div>
+                <div class="tech-badge">
+                  <div class="custom-tech-icon scipy-icon">PyC</div>
+                  <span class="tech-badge-name">PyCUDA</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ INTERACTIVE 3D LIDAR POINT CLOUD SCANNER ═══════════════ -->
+      <div class="robotics-lab-section animate-fade" style="margin-top: 60px;">
+        <div class="robotics-lab-card monochrome-card">
+          <div class="robotics-lab-header">
+            <h2 class="robotics-lab-title">3D LiDAR Point Cloud Spatial Scanner</h2>
+            <p class="robotics-lab-desc">
+              Spatial depth sensing inspired by DIY 3D LiDAR (D800). Rotate the 72-tick rotary encoder or drag directly on the 3D canvas to orbit through thousands of real-time laser point cloud returns in pure monochrome black and white.
+            </p>
+          </div>
+
+          <div class="robotics-lab-grid">
+            <!-- Left: Precision Rotary Knob Slider -->
+            <div class="knob-controller-card monochrome-knob-card">
+              <div class="knob-joint-selector">
+                <button type="button" class="joint-pill active" data-joint="yaw">3D Orbit Yaw (0-360°)</button>
+                <button type="button" class="joint-pill" data-joint="pitch">LiDAR Pitch (±45°)</button>
+                <button type="button" class="joint-pill" data-joint="density">Point Density (1-20k)</button>
+                <button type="button" class="joint-pill" data-joint="zoom">Sensor Range (5-50m)</button>
+              </div>
+
+              <!-- Rotary Knob Dial -->
+              <div class="knob-wrapper">
+                <div class="knob-slider monochrome-knob" id="robotics-knob" data-min="0" data-max="360" data-value="135">
+                  <svg viewBox="0 0 100 100" class="knob-ticks-svg" id="knob-ticks-svg"></svg>
+                  <div class="knob-arrow-wrap" id="knob-arrow">
+                    <div class="knob-arrow-pointer monochrome-arrow"></div>
+                  </div>
+                  <div class="knob-inner-disk monochrome-disk">
+                    <div class="knob-inner-border"></div>
+                    <div class="sliding-number-container font-mono" id="knob-sliding-number"></div>
+                    <span class="knob-unit-label font-mono" id="knob-unit-label">YAW (°)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Knob Quick Preset Buttons -->
+              <div class="knob-presets-toolbar">
+                <button type="button" class="knob-preset-btn" data-angle="45">45° Isometric</button>
+                <button type="button" class="knob-preset-btn active" data-angle="135">135° Perspective</button>
+                <button type="button" class="knob-preset-btn" data-angle="225">225° Profile</button>
+                <button type="button" class="knob-preset-btn" data-angle="360">360° Frontal</button>
+                <button type="button" class="knob-auto-btn active" id="knob-auto-cycle-btn">
+                  <i data-lucide="pause" id="knob-cycle-icon"></i>
+                  <span>Auto Orbit</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Right: Live 3D LiDAR Point Cloud Canvas & Telemetry Dashboard -->
+            <div class="robotics-visualizer-card monochrome-visualizer">
+              <div class="robot-canvas-wrapper monochrome-canvas-box">
+                <canvas id="robot-arm-canvas" width="480" height="280"></canvas>
+              </div>
+              <div class="robotics-telemetry-grid font-mono">
+                <div class="telemetry-stat monochrome-stat">
+                  <span class="stat-name">ORBIT AZIMUTH</span>
+                  <span class="stat-val text-white" id="stat-angle">135° AZIMUTH</span>
+                </div>
+                <div class="telemetry-stat monochrome-stat">
+                  <span class="stat-name">POINT CLOUD RETURNS</span>
+                  <span class="stat-val text-white" id="stat-torque">3,200 CLOUD PTS</span>
+                </div>
+                <div class="telemetry-stat monochrome-stat">
+                  <span class="stat-name">ELEVATION PITCH</span>
+                  <span class="stat-val text-white" id="stat-pid">PITCH: 18° (3D TOF)</span>
+                </div>
+                <div class="telemetry-stat monochrome-stat">
+                  <span class="stat-name">SENSOR RANGE FOV</span>
+                  <span class="stat-val text-white" id="stat-current">RANGE: 24.0m FOV</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ INTERACTIVE API ARCHITECTURE LAB ════════════════════════ -->
+      <div class="api-lab-section animate-fade" style="margin-top: 60px;">
+        <div class="api-lab-card">
+          <div class="api-lab-header">
+            <h2 class="api-lab-title">How Does an API Work? Interactive Lifecycle Scrubber</h2>
+            <p class="api-lab-desc">
+              Drag the tactile adaptive slider below to step through each milestone of a modern API request—from the initial button click on the client, through edge gateway routing and database lookups, to instant 240Hz UI state synchronization.
+            </p>
+          </div>
+
+          <!-- 3-Node Architecture Diagram -->
+          <div class="api-diagram">
+            <div class="api-node client" id="api-node-client">
+              <div class="api-node-icon"><i data-lucide="laptop"></i></div>
+              <span class="api-node-name">CLIENT APP</span>
+              <span class="api-node-sub font-mono">React / Mobile UI</span>
+              <span class="api-node-state font-mono">PORT 3000</span>
+            </div>
+
+            <div class="api-wire">
+              <div class="api-wire-line">
+                <div class="api-packet-pulse" id="api-packet-pulse-1"></div>
+              </div>
+              <span class="api-wire-label font-mono">HTTP/2 (REST / JSON)</span>
+            </div>
+
+            <div class="api-node gateway" id="api-node-gateway">
+              <div class="api-node-icon"><i data-lucide="server"></i></div>
+              <span class="api-node-name">API GATEWAY</span>
+              <span class="api-node-sub font-mono">Node.js / FastAPI</span>
+              <span class="api-node-state font-mono">ROUTER ENGINE</span>
+            </div>
+
+            <div class="api-wire">
+              <div class="api-wire-line">
+                <div class="api-packet-pulse pulse-violet" id="api-packet-pulse-2"></div>
+              </div>
+              <span class="api-wire-label font-mono">TCP / TLS SOCKET</span>
+            </div>
+
+            <div class="api-node database" id="api-node-db">
+              <div class="api-node-icon"><i data-lucide="database"></i></div>
+              <span class="api-node-name">DATA &amp; CACHE</span>
+              <span class="api-node-sub font-mono">PostgreSQL / Redis</span>
+              <span class="api-node-state font-mono">PORT 5432</span>
+            </div>
+          </div>
+
+          <!-- Tactile Adaptive Slider Control -->
+          <div class="api-slider-container">
+            <div class="api-slider-header">
+              <span class="api-slider-title font-mono">REQUEST LIFECYCLE SCRUBBER:</span>
+              <div class="api-slider-badge-wrap">
+                <span class="api-stage-badge font-mono" id="api-slider-stage-badge">HTTP/2 GET</span>
+              </div>
+            </div>
+
+            <div class="api-slider-track-wrap" id="api-slider-track-wrap">
+              <div class="api-slider-track">
+                <div class="api-slider-fill" id="api-slider-fill"></div>
+                <div class="api-slider-thumb" id="api-slider-thumb">
+                  <div class="thumb-inner-dot"></div>
+                </div>
+              </div>
+              <input type="range" min="1" max="5" step="1" value="1" class="api-slider-input" id="api-adaptive-range" aria-label="API Stage Slider">
+            </div>
+
+            <div class="api-slider-dots-container" id="api-slider-dots"></div>
+
+            <div class="api-slider-display">
+              <div class="api-slider-text-box font-mono" id="api-slider-text">CLIENT DISPATCH</div>
+              <span class="api-slider-unit font-mono" id="api-slider-unit">STEP 1</span>
+            </div>
+          </div>
+
+          <!-- Stage Telemetry & Live Code Inspector -->
+          <div class="api-inspector-grid">
+            <div class="api-detail-card">
+              <div class="api-card-header">
+                <span class="font-mono text-cyan" style="font-size: 0.82rem; letter-spacing: 1px;">STAGE TELEMETRY:</span>
+                <span class="font-mono api-status-tag" id="api-inspector-status">CLIENT DISPATCH</span>
+              </div>
+              <p class="api-card-desc" id="api-inspector-desc">
+                The user clicks an action or loads a view. The browser / mobile client constructs an asynchronous HTTP Request with headers (Accept: application/json, Bearer Auth) and fires it across the internet to the backend.
+              </p>
+              <div class="api-metric-row font-mono">
+                <div class="metric-item">
+                  <span class="metric-label">NETWORK ROUNDTRIP:</span>
+                  <span class="metric-val text-cyan" id="api-inspector-latency">0.4ms</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">ACTIVE NODE:</span>
+                  <span class="metric-val text-violet" id="api-inspector-node">CLIENT (REACT / BROWSER)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="api-code-card">
+              <div class="api-card-header">
+                <span class="font-mono text-violet" style="font-size: 0.82rem; letter-spacing: 1px;">PACKET PAYLOAD INSPECTOR:</span>
+                <span class="font-mono" style="font-size: 0.72rem; color: var(--text-muted);">JSON / HEADERS</span>
+              </div>
+              <pre class="api-code-block font-mono" id="api-inspector-code">GET /api/v1/system/telemetry HTTP/2
+Host: api.sharvinmhatre.com
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUz...
+User-Agent: AxiomClient/v2.4 (240Hz-Ultra)</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════════════
+         SECTION 3: PROJECTS SHOWCASE
+         ═════════════════════════════════════════════════════════════ -->
+    <section class="section-container" id="projects" style="padding-top: 100px; padding-bottom: 80px; max-width: 1200px; margin: 0 auto; width: 92%;">
+      <div class="section-header">
+        <div class="page-header-video-wrapper">
+          <video class="page-header-video" src="/assets/media/video/Website_8.mp4" autoplay loop muted playsinline preload="auto"></video>
+        </div>
+        <p class="section-desc animate-fade">
+          Open-source systems spanning GPU parallel computing, quantum physics tools, embedded particle engines, gamified finance, and AI-powered web platforms.
+        </p>
+      </div>
+
+      <div class="projects-grid" id="projects-grid">
+        <!-- ── SwarmDB ── -->
+        <div class="project-card">
+          <div class="card-badge badge-cyan">★ NVIDIA HACKATHON</div>
+          <div class="project-preview">
+            <img src="https://opengraph.githubassets.com/1/LuxShar007/SwarmDB" alt="SwarmDB" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="project-preview-fallback" style="color:var(--accent-cyan);">SWARM</div>
+          </div>
+          <div class="project-body">
+            <div class="project-meta">
+              <span class="lang-dot py"></span>
+              <span class="lang-label">Python / CUDA C++</span>
+              <span class="star-badge"><i data-lucide="star"></i> 2</span>
+            </div>
+            <h3 class="project-title">SwarmDB</h3>
+            <p class="project-desc">Massively parallel spatial indexing engine for autonomous robot swarms. CUDA grid-stride kernels, SciPy KD-Trees, and a P2P decentralized memory vault for real-time collision avoidance at 10,000+ agent scale.</p>
+            <div class="project-tags">
+              <span class="tag">CUDA</span><span class="tag">Python</span><span class="tag">FastAPI</span><span class="tag">NumPy</span><span class="tag">SciPy</span><span class="tag">GPU</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/LuxShar007/SwarmDB" target="_blank" class="plink plink-gh">
+                <i data-lucide="github"></i> Source Code
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── AtmosMorphSentry ── -->
+        <div class="project-card v">
+          <div class="card-badge badge-violet">★ SIES GST ROBOTICS</div>
+          <div class="project-preview">
+            <img src="https://opengraph.githubassets.com/1/LuxShar007/AtmosMorphSentry" alt="AtmosMorphSentry" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="project-preview-fallback" style="color:var(--accent-violet);">ATMOS</div>
+          </div>
+          <div class="project-body">
+            <div class="project-meta">
+              <span class="lang-dot py"></span>
+              <span class="lang-label">Python / Arduino</span>
+              <span class="star-badge"><i data-lucide="star"></i> 1</span>
+            </div>
+            <h3 class="project-title">AtmosMorphSentry</h3>
+            <p class="project-desc">144Hz 3D particle engine for real-time Mumbai telemetry visualization, driven by an Arduino Hall Effect hardware handshake. Developed for the SIES GST Robotics Domain.</p>
+            <div class="project-tags">
+              <span class="tag">Python</span><span class="tag">Arduino</span><span class="tag">144Hz</span><span class="tag">HCI</span><span class="tag">Particle Engine</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/LuxShar007/AtmosMorphSentry" target="_blank" class="plink plink-gh">
+                <i data-lucide="github"></i> Source Code
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Quantum Mechanics Calculator ── -->
+        <div class="project-card m">
+          <div class="card-badge badge-magenta">★ 1 STAR</div>
+          <div class="project-preview">
+            <img src="https://opengraph.githubassets.com/1/LuxShar007/QuantumMechanicsCalculator" alt="Quantum Mechanics Calculator" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="project-preview-fallback" style="color:var(--accent-magenta);">QMC</div>
+          </div>
+          <div class="project-body">
+            <div class="project-meta">
+              <span class="lang-dot js"></span>
+              <span class="lang-label">JavaScript</span>
+              <span class="star-badge"><i data-lucide="star"></i> 1</span>
+            </div>
+            <h3 class="project-title">Quantum Mechanics Calculator</h3>
+            <p class="project-desc">Interactive web calculator for quantum mechanics computations — Schrödinger equation solvers, wavefunction visualizers, and quantum state operators built for physics researchers.</p>
+            <div class="project-tags">
+              <span class="tag">JavaScript</span><span class="tag">Physics</span><span class="tag">Quantum</span><span class="tag">Web App</span><span class="tag">Vercel</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/LuxShar007/QuantumMechanicsCalculator" target="_blank" class="plink plink-gh">
+                <i data-lucide="github"></i> Source Code
+              </a>
+              <a href="https://quantum-mechanics-calculator.vercel.app" target="_blank" class="plink plink-live">
+                <i data-lucide="external-link"></i> Live Demo
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── VeloCook ── -->
+        <div class="project-card">
+          <div class="project-preview">
+            <img src="https://opengraph.githubassets.com/1/LuxShar007/VeloCook" alt="VeloCook" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="project-preview-fallback" style="color:var(--accent-cyan);">VELO</div>
+          </div>
+          <div class="project-body">
+            <div class="project-meta">
+              <span class="lang-dot js"></span>
+              <span class="lang-label">JavaScript / React</span>
+            </div>
+            <h3 class="project-title">VeloCook</h3>
+            <p class="project-desc">High-fidelity React cooking planner and grocery budget feasibility tool. Features a centered split-view dashboard to optimize meal planning under strict cost constraints.</p>
+            <div class="project-tags">
+              <span class="tag">React</span><span class="tag">Budget Tool</span><span class="tag">Dashboard</span><span class="tag">Vercel</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/LuxShar007/VeloCook" target="_blank" class="plink plink-gh">
+                <i data-lucide="github"></i> Source Code
+              </a>
+              <a href="https://velo-cook.vercel.app" target="_blank" class="plink plink-live">
+                <i data-lucide="external-link"></i> Live Demo
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── MindVane ── -->
+        <div class="project-card v">
+          <div class="project-preview">
+            <img src="https://opengraph.githubassets.com/1/LuxShar007/MindVane" alt="MindVane" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="project-preview-fallback" style="color:var(--accent-violet);">VANE</div>
+          </div>
+          <div class="project-body">
+            <div class="project-meta">
+              <span class="lang-dot js"></span>
+              <span class="lang-label">JavaScript</span>
+            </div>
+            <h3 class="project-title">MindVane</h3>
+            <p class="project-desc">AI-powered interactive mind mapping tool for visualizing complex ideas, planning technical projects, and structuring creative thinking. Deployed live on Vercel.</p>
+            <div class="project-tags">
+              <span class="tag">AI</span><span class="tag">Mind Mapping</span><span class="tag">JavaScript</span><span class="tag">Vercel</span>
+            </div>
+            <div class="project-links">
+              <a href="https://github.com/LuxShar007/MindVane" target="_blank" class="plink plink-gh">
+                <i data-lucide="github"></i> Source Code
+              </a>
+              <a href="https://mind-vane.vercel.app" target="_blank" class="plink plink-live">
+                <i data-lucide="external-link"></i> Live Demo
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════════════
+         SECTION 4: MILESTONES & 3D TROPHY HALL
+         ═════════════════════════════════════════════════════════════ -->
+    <section class="section-container" id="milestones" style="padding-top: 100px; padding-bottom: 80px; max-width: 1200px; margin: 0 auto; width: 92%;">
+      <div class="section-header">
+        <div class="page-header-video-wrapper">
+          <video class="page-header-video" src="/assets/media/video/Website_9.mp4" autoplay loop muted playsinline preload="auto"></video>
+        </div>
+        <p class="section-desc animate-fade">Interactive 3D Virtual Trophy Hall showcasing hackathon rank certificates, design competitions, and engineering milestones.</p>
+      </div>
+
+      <!-- 3D Virtual Trophy Hall Showcase -->
+      <div class="trophy-hall-section animate-fade" style="margin-bottom: 60px;">
+        <div class="trophy-header-bar font-mono" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; margin-bottom: 24px;">
+          <div class="trophy-filter-group" style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="trophy-filter-btn active" data-filter="all">ALL MEDALS (9)</button>
+            <button class="trophy-filter-btn" data-filter="hackathon">HACKATHONS (6)</button>
+            <button class="trophy-filter-btn" data-filter="hardware">HARDWARE (2)</button>
+            <button class="trophy-filter-btn" data-filter="design">DESIGN (1)</button>
+          </div>
+        </div>
+
+        <div class="trophy-grid">
+          <!-- Trophy 1: PromptWars '26 -->
+          <div class="trophy-card glass-panel" data-category="hackathon">
+            <div class="trophy-glare"></div>
+            <div class="trophy-badge cyan font-mono">RANK #33 · GOOGLE H2S</div>
+            <div class="trophy-icon-wrapper"><i data-lucide="trophy" class="trophy-icon text-cyan"></i></div>
+            <h3 class="trophy-title">PromptWars '26 In-Person</h3>
+            <p class="trophy-subtitle font-mono">Google for Developers × Hack2Skill</p>
+            <p class="trophy-desc">Ranked #33 in Mumbai Grand Sprint. Deployed VeloCook &amp; MindVane AI engines (AI Score: 93.76 / 100).</p>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; width: 100%;">
+              <a href="/assets/media/certificates/cert_promptwars_2026.jpg" class="cert-lightbox-trigger cta-button primary" data-title="Google × Hack2Skill PromptWars 2026 Certificate">
+                <span class="btn-content"><i data-lucide="award"></i> Inspect Certificate</span>
+              </a>
+              <a href="/assets/media/certificates/photo_promptwars_medal_2026.jpg" class="cert-lightbox-trigger cta-button secondary" data-title="PromptWars 2026 — Official 'Prompt Engineer' Medal">
+                <span class="btn-content"><i data-lucide="medal"></i> 3D Medal</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Trophy 2: ISRO Antariksh Hackathon -->
+          <div class="trophy-card glass-panel" data-category="hackathon">
+            <div class="trophy-glare"></div>
+            <div class="trophy-badge cyan font-mono">ISRO × HACK2SKILL</div>
+            <div class="trophy-icon-wrapper"><i data-lucide="rocket" class="trophy-icon text-cyan"></i></div>
+            <h3 class="trophy-title">Bharatiya Antariksh Hackathon '26</h3>
+            <p class="trophy-subtitle font-mono">Indian Space Research Organisation (ISRO)</p>
+            <p class="trophy-desc">Recognized for innovative idea submission and aerospace engineering approach solving real-world space challenges.</p>
+            <a href="/assets/media/certificates/cert_isro_antariksh_2026.png" class="cert-lightbox-trigger cta-button secondary" data-title="ISRO Bharatiya Antariksh Hackathon 2026 Certificate">
+              <span class="btn-content"><i data-lucide="award"></i> Inspect Certificate</span>
+            </a>
+          </div>
+
+          <!-- Trophy 3: AMD Developer Hackathon -->
+          <div class="trophy-card glass-panel" data-category="hackathon">
+            <div class="trophy-glare"></div>
+            <div class="trophy-badge magenta font-mono">AMD CLOUD &amp; LLAMA 4</div>
+            <div class="trophy-icon-wrapper"><i data-lucide="cpu" class="trophy-icon text-magenta"></i></div>
+            <h3 class="trophy-title">AMD Developer Hackathon: ACT II</h3>
+            <p class="trophy-subtitle font-mono">lablab.ai × NativelyAI &amp; AMD</p>
+            <p class="trophy-desc">Certificate of Completion deploying solutions on AMD Developer Cloud, Llama 4, Claude Code, and Gemma.</p>
+            <a href="/assets/media/certificates/cert_amd_hackathon_2026.png" class="cert-lightbox-trigger cta-button secondary" data-title="AMD Developer Hackathon: ACT II Certificate">
+              <span class="btn-content"><i data-lucide="award"></i> Inspect Certificate</span>
+            </a>
+          </div>
+
+          <!-- Trophy 4: QuizOff 2026 -->
+          <div class="trophy-card glass-panel" data-category="hackathon">
+            <div class="trophy-glare"></div>
+            <div class="trophy-badge purple font-mono">525K+ STUDENTS · UNSTOP</div>
+            <div class="trophy-icon-wrapper"><i data-lucide="brain" class="trophy-icon text-violet"></i></div>
+            <h3 class="trophy-title">QuizOff '26: India's Biggest AI Quiz</h3>
+            <p class="trophy-subtitle font-mono">CampusCrew × Unstop</p>
+            <p class="trophy-desc">Recognized for competing among 5,25,000+ students from 48,500+ institutions worldwide.</p>
+            <a href="/assets/media/certificates/cert_unstop_quizoff_2026.png" class="cert-lightbox-trigger cta-button secondary" data-title="QuizOff 2026 Certificate">
+              <span class="btn-content"><i data-lucide="award"></i> Inspect Certificate</span>
+            </a>
+          </div>
+
+          <!-- Trophy 5: XPLOITATHON '26 -->
+          <div class="trophy-card glass-panel" data-category="hackathon">
+            <div class="trophy-glare"></div>
+            <div class="trophy-badge purple font-mono">CTF QUALIFIER · ROUND 2</div>
+            <div class="trophy-icon-wrapper"><i data-lucide="shield" class="trophy-icon text-violet"></i></div>
+            <h3 class="trophy-title">XPLOITATHON '26</h3>
+            <p class="trophy-subtitle font-mono">OWASP × SIES GST</p>
+            <p class="trophy-desc">Qualified for Round 2 in cybersecurity, network packet inspection, and penetration challenges.</p>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; width: 100%;">
+              <a href="/assets/media/certificates/cert_xploitathon_2026_individual.jpg" class="cert-lightbox-trigger cta-button secondary" data-title="Xploitathon '26 CTF Individual Certificate">
+                <span class="btn-content"><i data-lucide="award"></i> Individual</span>
+              </a>
+              <a href="/assets/media/certificates/cert_xploitathon_2026_team.jpg" class="cert-lightbox-trigger cta-button secondary" data-title="Xploitathon '26 CTF Team Certificate">
+                <span class="btn-content"><i data-lucide="users"></i> Team</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Trophy 6: PixelVerse UI/UX -->
+          <div class="trophy-card glass-panel" data-category="design">
+            <div class="trophy-glare"></div>
+            <div class="trophy-badge cyan font-mono">DESIGN SPRINT</div>
+            <div class="trophy-icon-wrapper"><i data-lucide="palette" class="trophy-icon text-cyan"></i></div>
+            <h3 class="trophy-title">PixelVerse: UI/UX Sprint</h3>
+            <p class="trophy-subtitle font-mono">IEEE Student Branch</p>
+            <p class="trophy-desc">Awarded for responsive web design, micro-interactions, and visual design layout system.</p>
+            <a href="/assets/media/certificates/cert_pixelverse_2026.jpg" class="cert-lightbox-trigger cta-button secondary" data-title="PixelVerse UI/UX Sprint Certificate">
+              <span class="btn-content"><i data-lucide="award"></i> Inspect Certificate</span>
+            </a>
+          </div>
+
+          <!-- Trophy 7: Open Source Hackathon -->
+          <div class="trophy-card glass-panel" data-category="hackathon">
+            <div class="trophy-glare"></div>
+            <div class="trophy-badge purple font-mono">PRE-ASSESSMENT</div>
+            <div class="trophy-icon-wrapper"><i data-lucide="git-pull-request" class="trophy-icon text-violet"></i></div>
+            <h3 class="trophy-title">Open Source Hackathon 2026</h3>
+            <p class="trophy-subtitle font-mono">Elite Coders × ECSoC</p>
+            <p class="trophy-desc">Successfully qualified the Pre-Assessment Round of the national Open Source Hackathon 2026.</p>
+            <a href="/assets/media/certificates/cert_open_source_hackathon_2026.png" class="cert-lightbox-trigger cta-button secondary" data-title="Open Source Hackathon Certificate">
+              <span class="btn-content"><i data-lucide="award"></i> Inspect Certificate</span>
+            </a>
+          </div>
+
+          <!-- Trophy 8: Robotics Workshop -->
+          <div class="trophy-card glass-panel" data-category="hardware">
+            <div class="trophy-glare"></div>
+            <div class="trophy-badge cyan font-mono">ROBOTICS DOMAIN</div>
+            <div class="trophy-icon-wrapper"><i data-lucide="cpu" class="trophy-icon text-cyan"></i></div>
+            <h3 class="trophy-title">GSTian Development Programme (Robotics)</h3>
+            <p class="trophy-subtitle font-mono">SIES GST</p>
+            <p class="trophy-desc">Year-long hands-on engineering programme focusing on autonomous microcontrollers, real-time sensor loops, and hardware integration.</p>
+            <a href="/assets/media/certificates/cert_robotics_workshop_2026.png" class="cert-lightbox-trigger cta-button secondary" data-title="GSTian Robotics Programme Certificate">
+              <span class="btn-content"><i data-lucide="award"></i> Inspect Certificate</span>
+            </a>
+          </div>
+
+          <!-- Trophy 9: Unplugged Hardware -->
+          <div class="trophy-card glass-panel" data-category="hardware">
+            <div class="trophy-glare"></div>
+            <div class="trophy-badge magenta font-mono">EMBEDDED HARDWARE</div>
+            <div class="trophy-icon-wrapper"><i data-lucide="zap" class="trophy-icon text-magenta"></i></div>
+            <h3 class="trophy-title">Unplugged Hardware Sprint</h3>
+            <p class="trophy-subtitle font-mono">Maker Community</p>
+            <p class="trophy-desc">Awarded for hardware circuit prototyping, sensor fusion telemetry, and low-latency motor control systems.</p>
+            <a href="/assets/media/certificates/cert_unplugged_hackathon_2026.jpg" class="cert-lightbox-trigger cta-button secondary" data-title="Unplugged Hardware Sprint Certificate">
+              <span class="btn-content"><i data-lucide="award"></i> Inspect Certificate</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═════════════════════════════════════════════════════════════
+         SECTION 5: CYBER COMMAND TERMINAL & CONNECT
+         ═════════════════════════════════════════════════════════════ -->
+    <section class="section-container" id="connect" style="padding-top: 100px; padding-bottom: 100px; max-width: 1000px; margin: 0 auto; width: 92%;">
+      <div class="section-header">
+        <div class="page-header-video-wrapper">
+          <video class="page-header-video" src="/assets/media/video/Website_7.mp4" autoplay loop muted playsinline preload="auto"></video>
+        </div>
+        <p class="section-desc animate-fade">Encrypted command console link node to establish communication packets.</p>
+      </div>
+
+      <div class="terminal-container animate-fade">
+        <div class="terminal-window">
+          <div class="terminal-bar">
+            <div class="terminal-buttons">
+              <span class="btn-close"></span>
+              <span class="btn-minimize"></span>
+              <span class="btn-expand"></span>
+            </div>
+            <div class="terminal-title">sharvin_connect_secure.sh</div>
+          </div>
+          <div class="terminal-body font-mono">
+            <div class="terminal-output" id="terminal-output-log">
+              <p>Welcome to Sharvin Mhatre Command Line Console [v2.6.7]</p>
+              <p>Host location coordinates: Navi Mumbai / Panvel, Maharashtra, India.</p>
+              <p class="text-green">Connection secured. Port forwarding enabled over TLS v1.3</p>
+              <p class="help-text">Type 'help' to see console commands, or 'contact' to enter your transmission details.</p>
+              <p class="prompt-line">
+                <span class="prompt-prefix">sharvin@session:~$</span>
+                <span id="terminal-current-line" class="terminal-input-active"></span>
+                <span class="cursor-blink">_</span>
+              </p>
+            </div>
+            <input type="text" class="hidden-input" id="terminal-hidden-input" autocomplete="off" spellcheck="false" aria-label="Terminal Command Input">
+          </div>
+        </div>
       </div>
     </section>
 
   </main>
 
+  <!-- ╔═════════════════════════════════════════════════════════════╗
+       ║  SYSTEM FOOTER                                              ║
+       ╚═════════════════════════════════════════════════════════════╝ -->
+  <footer class="system-footer">
+    <div class="footer-container">
+      <div class="copyright">
+        &copy; 2026 Sharvin Mhatre. ALL RIGHTS RESERVED.
+      </div>
+      <div class="footer-right">
+        <a href="https://github.com/LuxShar007" target="_blank" class="footer-social-link" title="GitHub">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-github"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/in/shar095/" target="_blank" class="footer-social-link" title="LinkedIn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-linkedin"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+        </a>
+        <a href="https://hack2skill.com/dashboard/user_public_profile/?userId=69b52c5fedbc19762d96c7aa&utm_source=hack2skill&utm_medium=homepage" target="_blank" class="footer-social-link" title="Hack2Skill">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </a>
+        <a href="mailto:sharvinmhatre95@gmail.com" class="footer-social-link" title="Email Telemetry">
+          <i data-lucide="mail"></i>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ╔═════════════════════════════════════════════════════════════╗
+       ║  ENGINE & INTERACTION SCRIPTS                               ║
+       ╚═════════════════════════════════════════════════════════════╝ -->
   <!-- Navigation, Theme & Audio Engine -->
-  <script src="ultra-nav.js?v=9"></script>
+  <script src="ultra-nav.js?v=10"></script>
   <!-- 4-Video Slide-Up Scroll Engine -->
-  <script src="showcase-scroll.js?v=9"></script>
+  <script src="showcase-scroll.js?v=10"></script>
   <!-- Interactive Sound-Reactive Water Particles Engine -->
-  <script src="water-audio-particles.js?v=9"></script>
+  <script src="water-audio-particles.js?v=10"></script>
+  <!-- 3D LiDAR Point Cloud Scanner Engine -->
+  <script src="robotics-lab.js?v=10"></script>
+  <!-- API Architecture Lifecycle Scrubber Engine -->
+  <script src="api-lab.js?v=10"></script>
+  <!-- 3D Virtual Trophy Hall & Certificate Lightbox -->
+  <script src="trophy-hall.js?v=10"></script>
+  <!-- Cyber Command Terminal Engine -->
+  <script src="app_v3.js?v=10"></script>
+
+  <!-- Floating Dock ScrollSpy & Smooth Scroll Handler -->
+  <script>
+    (function() {
+      const dockItems = document.querySelectorAll('.dock-item');
+      const sections = ['pos-1', 'about', 'expertise', 'projects', 'milestones', 'connect']
+        .map(id => document.getElementById(id))
+        .filter(Boolean);
+
+      // Smooth scroll click handler
+      document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', (e) => {
+          const targetId = link.getAttribute('href').substring(1);
+          const targetEl = document.getElementById(targetId);
+          if (targetEl) {
+            e.preventDefault();
+            targetEl.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+      });
+
+      // ScrollSpy: highlight active dock item on scroll
+      window.addEventListener('scroll', () => {
+        const scrollPos = window.scrollY + 180;
+        let currentId = 'pos-1';
+
+        for (let i = sections.length - 1; i >= 0; i--) {
+          const sec = sections[i];
+          if (sec && sec.offsetTop <= scrollPos) {
+            currentId = sec.id;
+            break;
+          }
+        }
+
+        dockItems.forEach(item => {
+          const navTarget = item.getAttribute('data-nav');
+          item.classList.toggle('active', navTarget === currentId);
+        });
+      }, { passive: true });
+    })();
+  </script>
 
   <!-- Magnetic Cursor Script -->
   <script>
     (function() {
-      // Disable on touch screens (phones & tablets)
       if (window.matchMedia('(pointer: coarse)').matches) return;
 
       const cursor = document.getElementById('custom-cursor');
