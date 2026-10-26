@@ -72,9 +72,15 @@ const server = http.createServer((req, res) => {
     path.join(ROOT_DIR, cleanPath + '.html'),
     // 6. Direct in ASSETS_DIR
     path.join(ASSETS_DIR, cleanPath),
-    // 7. Original urlPath in SRC_DIR
+    // 7. Video space-to-underscore normalization (e.g. Website 2.mp4 -> Website_2.mp4)
+    path.join(ROOT_DIR, cleanPath.replace(/\/video\/Website\s+(\d+)\.mp4/i, '/video/Website_$1.mp4')),
+    // 8. Root OTF Font fallback (e.g. /SF-Pro-Display-Medium.otf -> assets/FONT/...)
+    path.join(ROOT_DIR, 'assets', 'FONT', path.basename(cleanPath)),
+    // 9. Favicon support in SRC_DIR
+    path.join(SRC_DIR, path.basename(cleanPath)),
+    // 10. Original urlPath in SRC_DIR
     path.join(SRC_DIR, urlPath),
-    // 8. Original urlPath + .html in SRC_DIR
+    // 11. Original urlPath + .html in SRC_DIR
     path.join(SRC_DIR, urlPath + '.html')
   ];
 

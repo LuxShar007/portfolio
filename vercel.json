@@ -8,9 +8,15 @@
     { "source": "/milestones", "destination": "/src/milestones.html" },
     { "source": "/projects", "destination": "/src/projects.html" },
     { "source": "/connect", "destination": "/src/connect.html" },
+    { "source": "/favicon.ico", "destination": "/src/favicon.ico" },
+    { "source": "/favicon.svg", "destination": "/src/favicon.svg" },
+    { "source": "/:font(SF-Pro-[^/]+\\.otf)", "destination": "/assets/FONT/:font" },
+    { "source": "/assets/:font(SF-Pro-[^/]+\\.otf)", "destination": "/assets/FONT/:font" },
+    { "source": "/assets/media/video/Website 2.mp4", "destination": "/assets/media/video/Website_2.mp4" },
+    { "source": "/assets/media/video/Website 3.mp4", "destination": "/assets/media/video/Website_3.mp4" },
     { "source": "/assets/:match*", "destination": "/assets/:match*" },
     { "source": "/media/:match*", "destination": "/assets/media/:match*" },
-    { "source": "/:filename([^/]+\\.(?:js|css|map|ico))", "destination": "/src/:filename" },
+    { "source": "/:filename([^/]+\\.(?:js|css|map|ico|svg))", "destination": "/src/:filename" },
     { "source": "/:filename([^/]+\\.html)", "destination": "/src/:filename" }
   ],
   "headers": [

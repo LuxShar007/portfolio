@@ -127,7 +127,9 @@
     if (pageCache.has(path)) return pageCache.get(path);
 
     try {
-      const res = await fetch('/' + path);
+      // Use clean URLs to eliminate 308 Permanent Redirects on Vercel
+      const fetchTarget = (path === 'index.html') ? '/' : '/' + path.replace(/\.html$/, '');
+      const res = await fetch(fetchTarget);
       if (!res.ok) return null;
       const html = await res.text();
       const parser = new DOMParser();
