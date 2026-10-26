@@ -545,6 +545,7 @@
     const focalLength = 320;
 
     function render3D() {
+      if (!canvas.isConnected) return;
       // 1. Auto rotation if enabled
       if (state.autoRotate && !state.isDraggingKnob && !state.isOrbitingCanvas) {
         state.camYaw += 0.006;

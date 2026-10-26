@@ -2,7 +2,7 @@
    SHARVIN MHATRE PORTFOLIO LOGIC & INTERACTION ENGINE
    ========================================================================== */
 
-document.addEventListener('DOMContentLoaded', () => {
+function initAppV3() {
   // Global search / console inputs declared at the top to prevent TDZ errors
   const consoleInput = document.getElementById('liquid-console-input');
   const consoleBtn   = document.getElementById('liquid-console-btn');
@@ -1070,4 +1070,13 @@ document.addEventListener('DOMContentLoaded', () => {
       consoleBtn.addEventListener('click', handleCommand);
     }
   }
-});
+}
+
+window.initAppV3 = initAppV3;
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initAppV3);
+} else {
+  initAppV3();
+}
+

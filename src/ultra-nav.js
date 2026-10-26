@@ -351,6 +351,44 @@
     }
   }
 
+  const loadedScriptSrcs = new Set();
+  document.querySelectorAll('script[src]').forEach(s => {
+    const src = s.getAttribute('src');
+    if (src) {
+      const clean = src.split('?')[0].replace(/^.*\/\/[^\/]+/, '');
+      loadedScriptSrcs.add(clean);
+      loadedScriptSrcs.add(src);
+    }
+  });
+
+  async function loadPageScripts(doc) {
+    if (!doc) return;
+    const scripts = Array.from(doc.querySelectorAll('script[src]'));
+    for (const s of scripts) {
+      const rawSrc = s.getAttribute('src');
+      if (!rawSrc) continue;
+      if (rawSrc.includes('lucide') && window.lucide) continue;
+      const clean = rawSrc.split('?')[0].replace(/^.*\/\/[^\/]+/, '');
+      if (loadedScriptSrcs.has(clean) || loadedScriptSrcs.has(rawSrc)) continue;
+
+      await new Promise((resolve) => {
+        const scriptEl = document.createElement('script');
+        scriptEl.src = rawSrc;
+        scriptEl.async = false;
+        scriptEl.onload = () => {
+          loadedScriptSrcs.add(clean);
+          loadedScriptSrcs.add(rawSrc);
+          resolve();
+        };
+        scriptEl.onerror = () => {
+          console.warn('Failed to dynamically load script:', rawSrc);
+          resolve();
+        };
+        document.body.appendChild(scriptEl);
+      });
+    }
+  }
+
   let isTransitioning = false;
 
   async function instantNavigate(targetUrl, updateHistory = true) {
@@ -389,6 +427,9 @@
 
     // Micro-fade out with 240Hz hardware acceleration
     currentMain.classList.add('page-transitioning-out');
+
+    // Dynamically load any missing scripts required by target page before mounting
+    await loadPageScripts(newDoc);
 
     setTimeout(() => {
       // Swap content and document metadata
@@ -434,6 +475,11 @@
       videos.forEach(v => {
         v.play().catch(() => {});
       });
+
+      // App Core interaction engine (terminal, contact form, hover cards, icons)
+      if (typeof window.initAppV3 === 'function') {
+        window.initAppV3();
+      }
 
       // Page-specific module lifecycles
       if (targetPath === 'index.html') {
