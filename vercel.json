@@ -16,7 +16,7 @@
     { "source": "/assets/media/video/Website 3.mp4", "destination": "/assets/media/video/Website_3.mp4" },
     { "source": "/assets/:match*", "destination": "/assets/:match*" },
     { "source": "/media/:match*", "destination": "/assets/media/:match*" },
-    { "source": "/:filename([^/]+\\.(?:js|css|map|ico|svg))", "destination": "/src/:filename" },
+    { "source": "/:filename([^/]+\\.(?:js|css|map|ico|svg|otf))", "destination": "/src/:filename" },
     { "source": "/:filename([^/]+\\.html)", "destination": "/src/:filename" }
   ],
   "headers": [
