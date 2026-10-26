@@ -2467,11 +2467,11 @@ button, input, textarea {
 }
 
 #pos-2 .showcase-video {
-  transform: scale(2.2) translateY(-14%);
+  transform: scale(2.2);
 }
 
 #pos-3 .showcase-video {
-  transform: scale(1.9) translateY(-6%);
+  transform: scale(2.0);
 }
 
 #pos-4 .showcase-video {
@@ -2826,8 +2826,8 @@ html {
   }
 
   #pos-1 .showcase-video { transform: scale(1.8) !important; }
-  #pos-2 .showcase-video { transform: scale(3.2) translateY(-14%) !important; }
-  #pos-3 .showcase-video { transform: scale(2.8) translateY(-6%) !important; }
+  #pos-2 .showcase-video { transform: scale(2.8) !important; }
+  #pos-3 .showcase-video { transform: scale(2.5) !important; }
   #pos-4 .showcase-video { transform: scale(1.8) !important; }
 
   .showcase-section {
@@ -2850,8 +2850,8 @@ html {
 
 @media (max-width: 480px) {
   #pos-1 .showcase-video { transform: scale(2.0) !important; }
-  #pos-2 .showcase-video { transform: scale(3.6) translateY(-14%) !important; }
-  #pos-3 .showcase-video { transform: scale(3.2) translateY(-6%) !important; }
+  #pos-2 .showcase-video { transform: scale(3.2) !important; }
+  #pos-3 .showcase-video { transform: scale(2.8) !important; }
   #pos-4 .showcase-video { transform: scale(2.0) !important; }
 
   .browse-destinations-grid {
