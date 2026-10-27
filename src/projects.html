@@ -4,227 +4,441 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Featured Projects | Sharvin Mhatre</title>
-  <meta name="description" content="Open-source projects by Sharvin Mhatre — GPU engines, quantum calculators, particle systems, and AI-powered web apps.">
+  <meta name="description" content="Production deployments, open-source software, and robotics hardware built by Sharvin Mhatre — Vercel deployments, CUDA GPU engines, and AI applications.">
 
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="alternate icon" href="/favicon.ico">
 
-  <link rel="stylesheet" href="styles.css?v=11">
+  <link rel="stylesheet" href="styles.css?v=12">
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
     /* ╔══════════════════════════════════════════════╗
-       ║  PROJECT CARDS                               ║
+       ║  VERCEL-STYLE DEPLOYMENT PROJECT CARDS       ║
        ╚══════════════════════════════════════════════╝ */
+    .projects-filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 24px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .filter-pill {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      padding: 6px 16px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      letter-spacing: 0.3px;
+    }
+
+    .filter-pill:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(var(--accent-cyan-rgb), 0.4);
+      color: var(--text-primary);
+    }
+
+    .filter-pill.active {
+      background: rgba(var(--accent-cyan-rgb), 0.14);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      box-shadow: 0 0 14px rgba(var(--accent-cyan-rgb), 0.2);
+    }
+
     .projects-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 28px;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 32px;
+      margin-top: 10px;
     }
 
     .project-card {
       position: relative;
-      border-radius: var(--radius-lg);
-      background-color: rgba(13, 18, 30, 0.45);
+      border-radius: 16px;
+      background: rgba(12, 16, 26, 0.7);
       border: 1px solid rgba(255, 255, 255, 0.08);
       overflow: hidden;
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      opacity: 1;
-      transform: translate3d(0, 0, 0) scale(1);
-      transition:
-        border-color 0.4s ease,
-        box-shadow 0.4s ease,
-        transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      will-change: transform, border-color, box-shadow;
-      backface-visibility: hidden;
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
     }
+
     .project-card:hover {
-      transform: translate3d(0, -8px, 0) scale(1);
-      border-color: rgba(var(--accent-cyan-rgb), 0.4);
-      box-shadow: 0 24px 48px rgba(0,0,0,0.5), 0 0 40px rgba(var(--accent-cyan-rgb), 0.06);
+      transform: translateY(-6px);
+      border-color: rgba(var(--accent-cyan-rgb), 0.45);
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.7), 0 0 35px rgba(var(--accent-cyan-rgb), 0.12);
     }
     .project-card.v:hover {
-      transform: translate3d(0, -8px, 0) scale(1);
-      border-color: rgba(var(--accent-violet-rgb), 0.4);
-      box-shadow: 0 24px 48px rgba(0,0,0,0.5), 0 0 40px rgba(var(--accent-violet-rgb), 0.06);
+      border-color: rgba(var(--accent-violet-rgb), 0.45);
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.7), 0 0 35px rgba(var(--accent-violet-rgb), 0.12);
     }
     .project-card.m:hover {
-      transform: translate3d(0, -8px, 0) scale(1);
-      border-color: rgba(var(--accent-magenta-rgb), 0.4);
-      box-shadow: 0 24px 48px rgba(0,0,0,0.5), 0 0 40px rgba(var(--accent-magenta-rgb), 0.06);
+      border-color: rgba(var(--accent-magenta-rgb), 0.45);
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.7), 0 0 35px rgba(var(--accent-magenta-rgb), 0.12);
     }
 
-    /* Shimmer scan line on hover */
-    .project-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 60%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
-      transition: left 0.7s ease;
-      z-index: 1;
-      pointer-events: none;
-    }
-    .project-card:hover::before { left: 150%; }
-
-    .project-preview {
-      width: 100%;
-      aspect-ratio: 2 / 1;
-      overflow: hidden;
-      background: rgba(0,0,0,0.25);
-      border-bottom: 1px solid var(--border-color);
-      position: relative;
-    }
-    .project-preview img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.65s cubic-bezier(0.165, 0.84, 0.44, 1);
-    }
-    .project-card:hover .project-preview img { transform: scale(1.05); }
-
-    .project-preview-fallback {
-      position: absolute;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-display);
-      font-size: 3rem;
-      font-weight: 800;
-      letter-spacing: -0.06em;
-      opacity: 0.18;
-    }
-
-    .project-body { padding: 26px 30px 30px; position: relative; z-index: 2; }
-
-    .project-meta {
+    /* Vercel-Style Browser Window Header */
+    .vercel-browser-header {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
+      justify-content: space-between;
+      padding: 11px 16px;
+      background: rgba(6, 9, 16, 0.95);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      gap: 12px;
     }
-    .lang-dot {
-      width: 10px; height: 10px;
-      border-radius: 50%; flex-shrink: 0;
-    }
-    .py   { background: #3572A5; }
-    .js   { background: #f1e05a; }
-    .cpp  { background: #f34b7d; }
-    .cuda { background: #76B900; }
 
-    .lang-label {
+    .browser-dots {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .browser-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .dot-red { background: #ff5f56; box-shadow: 0 0 5px rgba(255, 95, 86, 0.5); }
+    .dot-yellow { background: #ffbd2e; box-shadow: 0 0 5px rgba(255, 189, 46, 0.5); }
+    .dot-green { background: #27c93f; box-shadow: 0 0 5px rgba(39, 201, 63, 0.5); }
+
+    /* Browser URL Bar in Center */
+    .browser-address-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 4px 10px;
       font-family: var(--font-mono);
       font-size: 0.72rem;
-      color: var(--text-muted);
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      max-width: 62%;
     }
-    .star-badge {
-      margin-left: auto;
+    .browser-address-bar:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(var(--accent-cyan-rgb), 0.45);
+      color: var(--accent-cyan);
+    }
+    .project-card.v .browser-address-bar:hover {
+      border-color: rgba(var(--accent-violet-rgb), 0.45);
+      color: var(--accent-violet);
+    }
+    .project-card.m .browser-address-bar:hover {
+      border-color: rgba(var(--accent-magenta-rgb), 0.45);
+      color: var(--accent-magenta);
+    }
+
+    .browser-lock-icon {
+      width: 12px;
+      height: 12px;
+      color: #10b981;
+      flex-shrink: 0;
+    }
+    .browser-domain-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .browser-ext-icon {
+      width: 10px;
+      height: 10px;
+      opacity: 0.6;
+      flex-shrink: 0;
+    }
+
+    /* Vercel Status Badge */
+    .vercel-status-badge {
       display: flex;
       align-items: center;
       gap: 5px;
       font-family: var(--font-mono);
-      font-size: 0.72rem;
-      color: #e3a53a;
-    }
-    .star-badge svg { width: 12px; height: 12px; }
-
-    .project-title {
-      font-family: var(--font-display);
-      font-size: 1.3rem;
-      font-weight: 700;
-      letter-spacing: -0.4px;
-      margin-bottom: 9px;
-    }
-    .project-desc {
-      color: var(--text-secondary);
-      font-size: 0.88rem;
-      line-height: 1.65;
-      font-weight: 300;
-      margin-bottom: 18px;
-    }
-    .project-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      margin-bottom: 20px;
-    }
-    .tag {
-      padding: 3px 9px;
+      font-size: 0.65rem;
+      letter-spacing: 0.5px;
+      padding: 2px 8px;
       border-radius: 99px;
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      border: 1px solid var(--border-color);
-      color: var(--text-muted);
-      background: rgba(255,255,255,0.02);
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #10b981;
+      flex-shrink: 0;
     }
-    .project-links { display: flex; gap: 10px; flex-wrap: wrap; }
+    .status-pulse-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 6px #10b981;
+      animation: statusPulse 2s infinite ease-in-out;
+    }
+    .status-hardware .status-pulse-dot {
+      background: var(--accent-cyan);
+      box-shadow: 0 0 6px var(--accent-cyan);
+    }
+    .status-hardware {
+      background: rgba(var(--accent-cyan-rgb), 0.1);
+      border-color: rgba(var(--accent-cyan-rgb), 0.3);
+      color: var(--accent-cyan);
+    }
 
-    .plink {
+    @keyframes statusPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(0.8); }
+    }
+
+    /* Vercel Preview Viewport (Theme & Display) */
+    .vercel-preview-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9.5;
+      background: #020408;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: block;
+      cursor: pointer;
+    }
+
+    .vercel-preview-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), filter 0.4s ease;
+      display: block;
+    }
+
+    .project-card:hover .vercel-preview-img {
+      transform: scale(1.05);
+    }
+
+    /* Interactive Hover Overlay */
+    .vercel-preview-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(2, 5, 12, 0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      pointer-events: none;
+    }
+    .project-card:hover .vercel-preview-overlay {
+      opacity: 1;
+    }
+
+    .preview-action-chip {
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      padding: 8px 15px;
-      border-radius: var(--radius-md);
+      background: rgba(0, 0, 0, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 9px 18px;
+      border-radius: 99px;
+      color: #fff;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 500;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+      transform: translateY(8px);
+      transition: transform 0.25s ease;
+    }
+    .project-card:hover .preview-action-chip {
+      transform: translateY(0);
+    }
+
+    /* Card Details Body */
+    .project-body {
+      padding: 22px 24px 26px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .project-meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+
+    .project-category-tag {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--accent-cyan);
+    }
+    .project-card.v .project-category-tag { color: var(--accent-violet); }
+    .project-card.m .project-category-tag { color: var(--accent-magenta); }
+
+    .project-stars-pill {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: #f59e0b;
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      padding: 2px 7px;
+      border-radius: 99px;
+    }
+    .project-stars-pill svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .project-title {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+    }
+
+    .project-desc {
+      color: var(--text-secondary);
+      font-size: 0.86rem;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      flex: 1;
+      font-weight: 300;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 22px;
+    }
+    .tag {
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Separate Option Actions: Direct Website URL & GitHub Repository */
+    .project-actions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .btn-action-site {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 10px 14px;
+      border-radius: 8px;
       font-family: var(--font-mono);
       font-size: 0.75rem;
+      font-weight: 600;
+      background: rgba(var(--accent-cyan-rgb), 0.12);
+      border: 1px solid rgba(var(--accent-cyan-rgb), 0.35);
+      color: #fff;
       text-decoration: none;
       transition: all 0.25s ease;
+      text-align: center;
     }
-    .plink-gh {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border-color);
-      color: var(--text-primary);
+    .btn-action-site:hover {
+      background: rgba(var(--accent-cyan-rgb), 0.25);
+      border-color: rgba(var(--accent-cyan-rgb), 0.7);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(var(--accent-cyan-rgb), 0.25);
     }
-    .plink-gh:hover {
-      background: rgba(255,255,255,0.09);
-      border-color: rgba(255,255,255,0.2);
-    }
-    .plink-live {
-      background: rgba(var(--accent-cyan-rgb), 0.07);
-      border: 1px solid rgba(var(--accent-cyan-rgb), 0.25);
-      color: var(--accent-cyan);
-    }
-    .plink-live:hover { background: rgba(var(--accent-cyan-rgb), 0.14); }
-    .plink svg { width: 13px; height: 13px; }
 
-    .card-badge {
-      position: absolute;
-      top: 12px; right: 12px;
-      padding: 3px 9px;
-      border-radius: 99px;
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      letter-spacing: 1px;
-      z-index: 3;
-    }
-    .badge-cyan {
-      background: rgba(var(--accent-cyan-rgb), 0.12);
-      border: 1px solid rgba(var(--accent-cyan-rgb), 0.3);
-      color: var(--accent-cyan);
-    }
-    .badge-violet {
+    .project-card.v .btn-action-site {
       background: rgba(var(--accent-violet-rgb), 0.12);
-      border: 1px solid rgba(var(--accent-violet-rgb), 0.3);
-      color: var(--accent-violet);
+      border-color: rgba(var(--accent-violet-rgb), 0.35);
     }
-    .badge-magenta {
+    .project-card.v .btn-action-site:hover {
+      background: rgba(var(--accent-violet-rgb), 0.25);
+      border-color: rgba(var(--accent-violet-rgb), 0.7);
+      box-shadow: 0 4px 14px rgba(var(--accent-violet-rgb), 0.25);
+    }
+
+    .project-card.m .btn-action-site {
       background: rgba(var(--accent-magenta-rgb), 0.12);
-      border: 1px solid rgba(var(--accent-magenta-rgb), 0.3);
-      color: var(--accent-magenta);
+      border-color: rgba(var(--accent-magenta-rgb), 0.35);
+    }
+    .project-card.m .btn-action-site:hover {
+      background: rgba(var(--accent-magenta-rgb), 0.25);
+      border-color: rgba(var(--accent-magenta-rgb), 0.7);
+      box-shadow: 0 4px 14px rgba(var(--accent-magenta-rgb), 0.25);
+    }
+
+    .btn-action-gh {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: all 0.25s ease;
+      text-align: center;
+    }
+    .btn-action-gh:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+    }
+    .btn-action-gh svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 768px) {
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+      .project-actions-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
-
-
 
   <div class="custom-cursor" id="custom-cursor"></div>
   <div class="custom-cursor-dot" id="custom-cursor-dot"></div>
@@ -234,209 +448,407 @@
   <main class="content-wrapper" style="padding-top: 40px; min-height: 100vh;">
     <section class="section-container" style="padding-bottom: 80px;">
 
+      <!-- Header Section -->
       <div class="section-header">
         <div class="page-header-video-wrapper">
-          <video class="page-header-video" src="/assets/media/video/Website_8.mp4" autoplay loop muted playsinline preload="auto"></video>        <!-- ── SwarmDB ───────────────────────────────────── -->
-        <div class="project-card c" data-delay="0">
-          <div class="card-badge badge-cyan">★ NVIDIA HACKATHON</div>
-          <div class="project-preview">
-            <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;background:radial-gradient(circle at 50% 50%, rgba(0,210,255,0.12), #000000 80%);">
-              <defs>
-                <pattern id="grid-swarm" width="30" height="30" patternUnits="userSpaceOnUse">
-                  <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(0, 210, 255, 0.12)" stroke-width="1"/>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid-swarm)"/>
-              <circle cx="180" cy="120" r="4" fill="#00f0ff"/>
-              <circle cx="280" cy="80" r="5" fill="#00f0ff"/>
-              <circle cx="340" cy="180" r="4" fill="#00f0ff"/>
-              <circle cx="420" cy="110" r="6" fill="#00f0ff"/>
-              <line x1="180" y1="120" x2="280" y2="80" stroke="#00f0ff" stroke-width="1.5" stroke-opacity="0.6"/>
-              <line x1="280" y1="80" x2="340" y2="180" stroke="#00f0ff" stroke-width="1.5" stroke-opacity="0.6"/>
-              <line x1="340" y1="180" x2="420" y2="110" stroke="#00f0ff" stroke-width="1.5" stroke-opacity="0.6"/>
-              <text x="300" y="240" text-anchor="middle" fill="#00f0ff" font-family="'JetBrains Mono', monospace" font-size="14" letter-spacing="4" opacity="0.9">SWARM-DB // CUDA GPU ENGINE</text>
-            </svg>
+          <video class="page-header-video" src="/assets/media/video/Website_8.mp4" autoplay loop muted playsinline preload="auto"></video>
+        </div>
+        <p class="section-desc animate-fade">Live web applications, spatial algorithms, and hardware telemetry systems. Direct preview links to live deployed web applications alongside their open-source GitHub repositories.</p>
+      </div>
+
+      <!-- Quick Filter Bar -->
+      <div class="projects-filter-bar animate-fade">
+        <button type="button" class="filter-pill active" data-filter="all">All Projects (7)</button>
+        <button type="button" class="filter-pill" data-filter="webapp">Live Web Apps (6)</button>
+        <button type="button" class="filter-pill" data-filter="hardware">Hardware &amp; Robotics (1)</button>
+      </div>
+
+      <!-- ═══ PROJECTS GRID (7 Featured Works) ════════════════════ -->
+      <div class="projects-grid animate-fade" id="projects-grid">
+
+        <!-- ── 1. SwarmDB ───────────────────────────────────── -->
+        <article class="project-card" data-category="webapp">
+          <div class="vercel-browser-header">
+            <div class="browser-dots">
+              <span class="browser-dot dot-red"></span>
+              <span class="browser-dot dot-yellow"></span>
+              <span class="browser-dot dot-green"></span>
+            </div>
+            <a href="https://arxhaven.github.io/SwarmDB-Demo/" target="_blank" rel="noopener noreferrer" class="browser-address-bar" title="Visit arxhaven.github.io/SwarmDB-Demo/">
+              <i data-lucide="lock" class="browser-lock-icon"></i>
+              <span class="browser-domain-text">arxhaven.github.io/SwarmDB-Demo</span>
+              <i data-lucide="external-link" class="browser-ext-icon"></i>
+            </a>
+            <div class="vercel-status-badge">
+              <span class="status-pulse-dot"></span>
+              <span>Ready</span>
+            </div>
           </div>
+
+          <a href="https://arxhaven.github.io/SwarmDB-Demo/" target="_blank" rel="noopener noreferrer" class="vercel-preview-frame" title="Click to view live SwarmDB web demo">
+            <img src="/assets/images/preview_swarmdb.png" alt="SwarmDB Live Display Preview" class="vercel-preview-img" loading="lazy" />
+            <div class="vercel-preview-overlay">
+              <span class="preview-action-chip">
+                <i data-lucide="external-link"></i> Launch Live Web Demo
+              </span>
+            </div>
+          </a>
+
           <div class="project-body">
-            <div class="project-meta">
-              <span class="lang-dot py"></span>
-              <span class="lang-label">Python / CUDA C++</span>
-              <span class="star-badge"><i data-lucide="star"></i> 2</span>
+            <div class="project-meta-row">
+              <span class="project-category-tag">★ NVIDIA OPEN HACKATHON</span>
+              <span class="project-stars-pill"><i data-lucide="star"></i> 2</span>
             </div>
             <h3 class="project-title">SwarmDB</h3>
-            <p class="project-desc">Massively parallel spatial indexing engine for autonomous robot swarms. CUDA grid-stride kernels, SciPy KD-Trees, and a P2P decentralized memory vault for real-time collision avoidance at 10,000+ agent scale.</p>
+            <p class="project-desc">Massively parallel spatial database engine engineered for autonomous multi-agent robot swarms. Powered by CUDA grid-stride kernels, SciPy KD-Trees, and decentralized P2P telemetry loops for real-time proximity detection at 10,000+ agent scale.</p>
             <div class="project-tags">
-              <span class="tag">CUDA</span><span class="tag">Python</span><span class="tag">FastAPI</span>
-              <span class="tag">NumPy</span><span class="tag">SciPy</span><span class="tag">GPU</span>
+              <span class="tag">CUDA C++</span>
+              <span class="tag">Python</span>
+              <span class="tag">FastAPI</span>
+              <span class="tag">NumPy</span>
+              <span class="tag">SciPy</span>
+              <span class="tag">Spatial Indexing</span>
             </div>
-            <div class="project-links">
-              <a href="https://github.com/LuxShar007/SwarmDB" target="_blank" class="plink plink-gh">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>Source Code
+            <div class="project-actions-grid">
+              <a href="https://arxhaven.github.io/SwarmDB-Demo/" target="_blank" rel="noopener noreferrer" class="btn-action-site" title="Visit Live SwarmDB App">
+                <i data-lucide="external-link"></i> Live Web Demo
+              </a>
+              <a href="https://github.com/LuxShar007/SwarmDB" target="_blank" rel="noopener noreferrer" class="btn-action-gh" title="View SwarmDB GitHub Repository">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                GitHub Repo
               </a>
             </div>
           </div>
-        </div>
+        </article>
 
-        <!-- ── AtmosMorphSentry ────────────────────────────── -->
-        <div class="project-card v" data-delay="100">
-          <div class="card-badge badge-violet">★ SIES GST ROBOTICS</div>
-          <div class="project-preview">
-            <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;background:radial-gradient(circle at 50% 50%, rgba(138,43,226,0.14), #000000 80%);">
-              <defs>
-                <pattern id="grid-atmos" width="30" height="30" patternUnits="userSpaceOnUse">
-                  <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(138, 43, 226, 0.12)" stroke-width="1"/>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid-atmos)"/>
-              <circle cx="300" cy="120" r="50" fill="none" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="4 4"/>
-              <circle cx="300" cy="120" r="30" fill="none" stroke="#a855f7" stroke-width="2"/>
-              <circle cx="300" cy="120" r="6" fill="#c084fc"/>
-              <text x="300" y="240" text-anchor="middle" fill="#c084fc" font-family="'JetBrains Mono', monospace" font-size="14" letter-spacing="4" opacity="0.9">ATMOS // 144Hz TELEMETRY</text>
-            </svg>
-          </div>
-          <div class="project-body">
-            <div class="project-meta">
-              <span class="lang-dot py"></span>
-              <span class="lang-label">Python / Arduino</span>
-              <span class="star-badge"><i data-lucide="star"></i> 1</span>
+        <!-- ── 2. VeloCook ──────────────────────────────────── -->
+        <article class="project-card" data-category="webapp">
+          <div class="vercel-browser-header">
+            <div class="browser-dots">
+              <span class="browser-dot dot-red"></span>
+              <span class="browser-dot dot-yellow"></span>
+              <span class="browser-dot dot-green"></span>
             </div>
-            <h3 class="project-title">AtmosMorphSentry</h3>
-            <p class="project-desc">144Hz 3D particle engine for real-time Mumbai telemetry visualization, driven by an Arduino Hall Effect hardware handshake. Developed for the SIES GST Robotics Domain — exploring the first 0.1% of high-fidelity HCI.</p>
-            <div class="project-tags">
-              <span class="tag">Python</span><span class="tag">Arduino</span><span class="tag">144Hz</span>
-              <span class="tag">HCI</span><span class="tag">Particle Engine</span><span class="tag">Robotics</span>
-            </div>
-            <div class="project-links">
-              <a href="https://github.com/LuxShar007/AtmosMorphSentry" target="_blank" class="plink plink-gh">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>Source Code
-              </a>
+            <a href="https://velo-cook.vercel.app" target="_blank" rel="noopener noreferrer" class="browser-address-bar" title="Visit velo-cook.vercel.app">
+              <i data-lucide="lock" class="browser-lock-icon"></i>
+              <span class="browser-domain-text">velo-cook.vercel.app</span>
+              <i data-lucide="external-link" class="browser-ext-icon"></i>
+            </a>
+            <div class="vercel-status-badge">
+              <span class="status-pulse-dot"></span>
+              <span>Production</span>
             </div>
           </div>
-        </div>
 
-        <!-- ── QuantumMechanicsCalculator ─────────────────── -->
-        <div class="project-card m" data-delay="200">
-          <div class="card-badge badge-magenta">★ 1 STAR</div>
-          <div class="project-preview">
-            <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;background:radial-gradient(circle at 50% 50%, rgba(255,0,128,0.12), #000000 80%);">
-              <defs>
-                <pattern id="grid-qmc" width="30" height="30" patternUnits="userSpaceOnUse">
-                  <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(255, 0, 128, 0.12)" stroke-width="1"/>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid-qmc)"/>
-              <path d="M 100 150 Q 200 40 300 150 T 500 150" fill="none" stroke="#f43f5e" stroke-width="2.5"/>
-              <path d="M 100 150 Q 200 240 300 150 T 500 150" fill="none" stroke="#f43f5e" stroke-width="1.5" stroke-opacity="0.5" stroke-dasharray="6 4"/>
-              <text x="300" y="240" text-anchor="middle" fill="#f43f5e" font-family="'JetBrains Mono', monospace" font-size="14" letter-spacing="4" opacity="0.9">QUANTUM // SCHRÖDINGER CORE</text>
-            </svg>
-          </div>
-          <div class="project-body">
-            <div class="project-meta">
-              <span class="lang-dot js"></span>
-              <span class="lang-label">JavaScript</span>
-              <span class="star-badge"><i data-lucide="star"></i> 1</span>
+          <a href="https://velo-cook.vercel.app" target="_blank" rel="noopener noreferrer" class="vercel-preview-frame" title="Click to open live VeloCook app">
+            <img src="/assets/images/preview_velocook.png" alt="VeloCook Live Display Preview" class="vercel-preview-img" loading="lazy" />
+            <div class="vercel-preview-overlay">
+              <span class="preview-action-chip">
+                <i data-lucide="external-link"></i> Open Live VeloCook App
+              </span>
             </div>
-            <h3 class="project-title">Quantum Mechanics Calculator</h3>
-            <p class="project-desc">Interactive web calculator for quantum mechanics computations — Schrödinger equation solvers, wavefunction visualizers, and quantum state operators built for physics students and researchers.</p>
-            <div class="project-tags">
-              <span class="tag">JavaScript</span><span class="tag">Physics</span>
-              <span class="tag">Quantum</span><span class="tag">Web App</span><span class="tag">Vercel</span>
-            </div>
-            <div class="project-links">
-              <a href="https://github.com/LuxShar007/QuantumMechanicsCalculator" target="_blank" class="plink plink-gh">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>Source Code
-              </a>
-              <a href="https://quantum-mechanics-calculator.vercel.app" target="_blank" class="plink plink-live">
-                <i data-lucide="external-link"></i> Live Demo
-              </a>
-            </div>
-          </div>
-        </div>
+          </a>
 
-        <!-- ── VeloCook ───────────────────────────────────── -->
-        <div class="project-card" data-delay="300">
-          <div class="project-preview">
-            <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;background:radial-gradient(circle at 50% 50%, rgba(0,210,255,0.12), #000000 80%);">
-              <defs>
-                <pattern id="grid-velo" width="30" height="30" patternUnits="userSpaceOnUse">
-                  <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(0, 210, 255, 0.12)" stroke-width="1"/>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid-velo)"/>
-              <rect x="200" y="70" width="200" height="100" rx="10" fill="none" stroke="#00f0ff" stroke-width="1.5"/>
-              <line x1="200" y1="105" x2="400" y2="105" stroke="#00f0ff" stroke-width="1"/>
-              <circle cx="230" cy="88" r="4" fill="#00f0ff"/>
-              <circle cx="250" cy="88" r="4" fill="#00f0ff" opacity="0.5"/>
-              <circle cx="270" cy="88" r="4" fill="#00f0ff" opacity="0.3"/>
-              <text x="300" y="240" text-anchor="middle" fill="#00f0ff" font-family="'JetBrains Mono', monospace" font-size="14" letter-spacing="4" opacity="0.9">VELOCOOK // BUDGET ALGORITHM</text>
-            </svg>
-          </div>
           <div class="project-body">
-            <div class="project-meta">
-              <span class="lang-dot js"></span>
-              <span class="lang-label">JavaScript / React</span>
+            <div class="project-meta-row">
+              <span class="project-category-tag">▲ VERCEL DEPLOYMENT</span>
+              <span class="project-stars-pill"><i data-lucide="star"></i> 0</span>
             </div>
             <h3 class="project-title">VeloCook</h3>
-            <p class="project-desc">High-fidelity React cooking planner and grocery budget feasibility tool. Features a centered split-view dashboard with a management consulting aesthetic to optimize meal planning under strict cost constraints.</p>
+            <p class="project-desc">High-fidelity React-based cooking to-do generator and grocery budget feasibility platform designed with a management consulting aesthetic. Features a split-view dashboard optimizing daily recipes and ingredient costs under strict boundary budgets.</p>
             <div class="project-tags">
-              <span class="tag">React</span><span class="tag">Budget Tool</span>
-              <span class="tag">Dashboard</span><span class="tag">Vercel</span>
+              <span class="tag">React</span>
+              <span class="tag">JavaScript</span>
+              <span class="tag">Budget Algorithm</span>
+              <span class="tag">Consulting UI</span>
+              <span class="tag">Vercel</span>
             </div>
-            <div class="project-links">
-              <a href="https://github.com/LuxShar007/VeloCook" target="_blank" class="plink plink-gh">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>Source Code
+            <div class="project-actions-grid">
+              <a href="https://velo-cook.vercel.app" target="_blank" rel="noopener noreferrer" class="btn-action-site" title="Visit Live VeloCook Website">
+                <i data-lucide="external-link"></i> Live Website
               </a>
-              <a href="https://velo-cook.vercel.app" target="_blank" class="plink plink-live">
-                <i data-lucide="external-link"></i> Live Demo
+              <a href="https://github.com/LuxShar007/VeloCook" target="_blank" rel="noopener noreferrer" class="btn-action-gh" title="View VeloCook GitHub Repository">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                GitHub Repo
               </a>
             </div>
           </div>
-        </div>
+        </article>
 
-        <!-- ── MindVane ───────────────────────────────────── -->
-        <div class="project-card v" data-delay="400">
-          <div class="project-preview">
-            <svg viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;background:radial-gradient(circle at 50% 50%, rgba(138,43,226,0.14), #000000 80%);">
-              <defs>
-                <pattern id="grid-vane" width="30" height="30" patternUnits="userSpaceOnUse">
-                  <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(138, 43, 226, 0.12)" stroke-width="1"/>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid-vane)"/>
-              <circle cx="300" cy="110" r="18" fill="none" stroke="#c084fc" stroke-width="2"/>
-              <circle cx="220" cy="150" r="10" fill="none" stroke="#c084fc" stroke-width="1.5"/>
-              <circle cx="380" cy="150" r="10" fill="none" stroke="#c084fc" stroke-width="1.5"/>
-              <line x1="285" y1="120" x2="230" y2="145" stroke="#c084fc" stroke-width="1.5"/>
-              <line x1="315" y1="120" x2="370" y2="145" stroke="#c084fc" stroke-width="1.5"/>
-              <text x="300" y="240" text-anchor="middle" fill="#c084fc" font-family="'JetBrains Mono', monospace" font-size="14" letter-spacing="4" opacity="0.9">MINDVANE // NEURAL GENAI</text>
-            </svg>
+        <!-- ── 3. MindVane ──────────────────────────────────── -->
+        <article class="project-card v" data-category="webapp">
+          <div class="vercel-browser-header">
+            <div class="browser-dots">
+              <span class="browser-dot dot-red"></span>
+              <span class="browser-dot dot-yellow"></span>
+              <span class="browser-dot dot-green"></span>
+            </div>
+            <a href="https://mind-vane.vercel.app" target="_blank" rel="noopener noreferrer" class="browser-address-bar" title="Visit mind-vane.vercel.app">
+              <i data-lucide="lock" class="browser-lock-icon"></i>
+              <span class="browser-domain-text">mind-vane.vercel.app</span>
+              <i data-lucide="external-link" class="browser-ext-icon"></i>
+            </a>
+            <div class="vercel-status-badge">
+              <span class="status-pulse-dot"></span>
+              <span>Production</span>
+            </div>
           </div>
+
+          <a href="https://mind-vane.vercel.app" target="_blank" rel="noopener noreferrer" class="vercel-preview-frame" title="Click to open live MindVane app">
+            <img src="/assets/images/preview_mindvane.png" alt="MindVane Live Display Preview" class="vercel-preview-img" loading="lazy" />
+            <div class="vercel-preview-overlay">
+              <span class="preview-action-chip">
+                <i data-lucide="external-link"></i> Open Live MindVane App
+              </span>
+            </div>
+          </a>
+
           <div class="project-body">
-            <div class="project-meta">
-              <span class="lang-dot js"></span>
-              <span class="lang-label">JavaScript</span>
+            <div class="project-meta-row">
+              <span class="project-category-tag">▲ VERCEL DEPLOYMENT</span>
+              <span class="project-stars-pill"><i data-lucide="star"></i> 0</span>
             </div>
             <h3 class="project-title">MindVane</h3>
-            <p class="project-desc">AI-powered interactive mind mapping tool for visualizing complex ideas, planning technical projects, and structuring creative thinking. Clean, modern interface deployed live on Vercel.</p>
+            <p class="project-desc">Empathetic AI mental wellness micro-app and student burnout tracker designed for competitive exam candidates (JEE, NEET, GATE, UPSC) to identify hidden stress patterns and synthesize personalized conversational wellness assistance.</p>
             <div class="project-tags">
-              <span class="tag">AI</span><span class="tag">Mind Mapping</span>
-              <span class="tag">JavaScript</span><span class="tag">Vercel</span>
+              <span class="tag">AI Companion</span>
+              <span class="tag">React</span>
+              <span class="tag">Burnout Analytics</span>
+              <span class="tag">Mental Wellness</span>
+              <span class="tag">Vercel</span>
             </div>
-            <div class="project-links">
-              <a href="https://github.com/LuxShar007/MindVane" target="_blank" class="plink plink-gh">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: -2px; margin-right: 4px;"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>Source Code
+            <div class="project-actions-grid">
+              <a href="https://mind-vane.vercel.app" target="_blank" rel="noopener noreferrer" class="btn-action-site" title="Visit Live MindVane Website">
+                <i data-lucide="external-link"></i> Live Website
               </a>
-              <a href="https://mind-vane.vercel.app" target="_blank" class="plink plink-live">
-                <i data-lucide="external-link"></i> Live Demo
+              <a href="https://github.com/LuxShar007/MindVane" target="_blank" rel="noopener noreferrer" class="btn-action-gh" title="View MindVane GitHub Repository">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                GitHub Repo
               </a>
             </div>
           </div>
-        </div>
+        </article>
+
+        <!-- ── 4. FortuneForge ──────────────────────────────── -->
+        <article class="project-card m" data-category="webapp">
+          <div class="vercel-browser-header">
+            <div class="browser-dots">
+              <span class="browser-dot dot-red"></span>
+              <span class="browser-dot dot-yellow"></span>
+              <span class="browser-dot dot-green"></span>
+            </div>
+            <a href="https://fortune-forge-tau.vercel.app" target="_blank" rel="noopener noreferrer" class="browser-address-bar" title="Visit fortune-forge-tau.vercel.app">
+              <i data-lucide="lock" class="browser-lock-icon"></i>
+              <span class="browser-domain-text">fortune-forge-tau.vercel.app</span>
+              <i data-lucide="external-link" class="browser-ext-icon"></i>
+            </a>
+            <div class="vercel-status-badge">
+              <span class="status-pulse-dot"></span>
+              <span>Production</span>
+            </div>
+          </div>
+
+          <a href="https://fortune-forge-tau.vercel.app" target="_blank" rel="noopener noreferrer" class="vercel-preview-frame" title="Click to open live FortuneForge app">
+            <img src="/assets/images/preview_fortuneforge.png" alt="FortuneForge Live Display Preview" class="vercel-preview-img" loading="lazy" />
+            <div class="vercel-preview-overlay">
+              <span class="preview-action-chip">
+                <i data-lucide="external-link"></i> Open Live FortuneForge App
+              </span>
+            </div>
+          </a>
+
+          <div class="project-body">
+            <div class="project-meta-row">
+              <span class="project-category-tag">▲ VERCEL DEPLOYMENT</span>
+              <span class="project-stars-pill"><i data-lucide="star"></i> 1</span>
+            </div>
+            <h3 class="project-title">FortuneForge</h3>
+            <p class="project-desc">Next-generation gamified financial management and wealth-building platform. Converts personal finance metrics (income, savings, debt) into RPG character attributes (Shield Health, Mana, Character Class, XP) with an interactive AI Financial Coach.</p>
+            <div class="project-tags">
+              <span class="tag">FinTech</span>
+              <span class="tag">AI Coach</span>
+              <span class="tag">Gamified RPG</span>
+              <span class="tag">React</span>
+              <span class="tag">Vercel</span>
+            </div>
+            <div class="project-actions-grid">
+              <a href="https://fortune-forge-tau.vercel.app" target="_blank" rel="noopener noreferrer" class="btn-action-site" title="Visit Live FortuneForge Website">
+                <i data-lucide="external-link"></i> Live Website
+              </a>
+              <a href="https://github.com/LuxShar007/FortuneForge" target="_blank" rel="noopener noreferrer" class="btn-action-gh" title="View FortuneForge GitHub Repository">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                GitHub Repo
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- ── 5. AttendanceWebApp (Axiom Attendance Predictor) ── -->
+        <article class="project-card" data-category="webapp">
+          <div class="vercel-browser-header">
+            <div class="browser-dots">
+              <span class="browser-dot dot-red"></span>
+              <span class="browser-dot dot-yellow"></span>
+              <span class="browser-dot dot-green"></span>
+            </div>
+            <a href="https://axiom-attendence-predictor.vercel.app" target="_blank" rel="noopener noreferrer" class="browser-address-bar" title="Visit axiom-attendence-predictor.vercel.app">
+              <i data-lucide="lock" class="browser-lock-icon"></i>
+              <span class="browser-domain-text">axiom-attendence-predictor.vercel.app</span>
+              <i data-lucide="external-link" class="browser-ext-icon"></i>
+            </a>
+            <div class="vercel-status-badge">
+              <span class="status-pulse-dot"></span>
+              <span>Production</span>
+            </div>
+          </div>
+
+          <a href="https://axiom-attendence-predictor.vercel.app" target="_blank" rel="noopener noreferrer" class="vercel-preview-frame" title="Click to open live Axiom Attendance Predictor">
+            <img src="/assets/images/preview_attendance.png" alt="Axiom Attendance Predictor Live Display Preview" class="vercel-preview-img" loading="lazy" />
+            <div class="vercel-preview-overlay">
+              <span class="preview-action-chip">
+                <i data-lucide="external-link"></i> Open Attendance App
+              </span>
+            </div>
+          </a>
+
+          <div class="project-body">
+            <div class="project-meta-row">
+              <span class="project-category-tag">▲ VERCEL DEPLOYMENT</span>
+              <span class="project-stars-pill"><i data-lucide="star"></i> 1</span>
+            </div>
+            <h3 class="project-title">Axiom Attendance Predictor</h3>
+            <p class="project-desc">Intelligent academic attendance forecasting and bunk feasibility calculator for university students. Evaluates real-time threshold margins, simulates timetable impacts, and ensures academic compliance with 75% attendance criteria.</p>
+            <div class="project-tags">
+              <span class="tag">Predictive Analytics</span>
+              <span class="tag">JavaScript</span>
+              <span class="tag">Attendance Logic</span>
+              <span class="tag">Vercel</span>
+              <span class="tag">Dashboard</span>
+            </div>
+            <div class="project-actions-grid">
+              <a href="https://axiom-attendence-predictor.vercel.app" target="_blank" rel="noopener noreferrer" class="btn-action-site" title="Visit Live Attendance App">
+                <i data-lucide="external-link"></i> Live Website
+              </a>
+              <a href="https://github.com/LuxShar007/AttendanceWebApp" target="_blank" rel="noopener noreferrer" class="btn-action-gh" title="View AttendanceWebApp GitHub Repository">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                GitHub Repo
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- ── 6. AtmosMorphSentry ──────────────────────────── -->
+        <article class="project-card v" data-category="hardware">
+          <div class="vercel-browser-header">
+            <div class="browser-dots">
+              <span class="browser-dot dot-red"></span>
+              <span class="browser-dot dot-yellow"></span>
+              <span class="browser-dot dot-green"></span>
+            </div>
+            <div class="browser-address-bar" title="Hardware Interface // Arduino & Hall Effect">
+              <i data-lucide="cpu" class="browser-lock-icon" style="color: var(--accent-violet);"></i>
+              <span class="browser-domain-text">hardware://arduino-hall-effect-deck</span>
+            </div>
+            <div class="vercel-status-badge status-hardware">
+              <span class="status-pulse-dot"></span>
+              <span>Telemetry</span>
+            </div>
+          </div>
+
+          <a href="/assets/images/atmos_hardware_setup.jpg" target="_blank" class="vercel-preview-frame" title="Click to view full hardware setup photograph">
+            <img src="/assets/images/atmos_hardware_setup.jpg" alt="AtmosMorphSentry Hardware Setup Prototype" class="vercel-preview-img" loading="lazy" />
+            <div class="vercel-preview-overlay">
+              <span class="preview-action-chip">
+                <i data-lucide="maximize-2"></i> View Hardware Setup Photo
+              </span>
+            </div>
+          </a>
+
+          <div class="project-body">
+            <div class="project-meta-row">
+              <span class="project-category-tag">★ SIES GST ROBOTICS DOMAIN</span>
+              <span class="project-stars-pill"><i data-lucide="star"></i> 1</span>
+            </div>
+            <h3 class="project-title">AtmosMorphSentry</h3>
+            <p class="project-desc">144Hz 3D Particle Engine for real-time Mumbai meteorological telemetry visualization. Interfaced with an Arduino-based Hall Effect hardware handshake for physical tactile control, exploring the frontier of integrated hardware-software HCI.</p>
+            <div class="project-tags">
+              <span class="tag">Python</span>
+              <span class="tag">Arduino</span>
+              <span class="tag">144Hz Engine</span>
+              <span class="tag">Hall Effect</span>
+              <span class="tag">HCI Hardware</span>
+              <span class="tag">Robotics</span>
+            </div>
+            <div class="project-actions-grid">
+              <a href="/assets/images/atmos_hardware_setup.jpg" target="_blank" class="btn-action-site" title="View Hardware Setup Images">
+                <i data-lucide="image"></i> Hardware Photos
+              </a>
+              <a href="https://github.com/LuxShar007/AtmosMorphSentry" target="_blank" rel="noopener noreferrer" class="btn-action-gh" title="View AtmosMorphSentry GitHub Repository">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                GitHub Repo
+              </a>
+            </div>
+          </div>
+        </article>
+
+        <!-- ── 7. QuantumMechanicsCalculator ────────────────── -->
+        <article class="project-card m" data-category="webapp">
+          <div class="vercel-browser-header">
+            <div class="browser-dots">
+              <span class="browser-dot dot-red"></span>
+              <span class="browser-dot dot-yellow"></span>
+              <span class="browser-dot dot-green"></span>
+            </div>
+            <a href="https://quantum-mechanics-calculator.vercel.app" target="_blank" rel="noopener noreferrer" class="browser-address-bar" title="Visit quantum-mechanics-calculator.vercel.app">
+              <i data-lucide="lock" class="browser-lock-icon"></i>
+              <span class="browser-domain-text">quantum-mechanics-calculator.vercel.app</span>
+              <i data-lucide="external-link" class="browser-ext-icon"></i>
+            </a>
+            <div class="vercel-status-badge">
+              <span class="status-pulse-dot"></span>
+              <span>Production</span>
+            </div>
+          </div>
+
+          <a href="https://quantum-mechanics-calculator.vercel.app" target="_blank" rel="noopener noreferrer" class="vercel-preview-frame" title="Click to open live Quantum Mechanics Calculator">
+            <img src="/assets/images/preview_quantum.png" alt="Quantum Mechanics Calculator Live Display Preview" class="vercel-preview-img" loading="lazy" />
+            <div class="vercel-preview-overlay">
+              <span class="preview-action-chip">
+                <i data-lucide="external-link"></i> Open Quantum Calculator
+              </span>
+            </div>
+          </a>
+
+          <div class="project-body">
+            <div class="project-meta-row">
+              <span class="project-category-tag">▲ VERCEL DEPLOYMENT</span>
+              <span class="project-stars-pill"><i data-lucide="star"></i> 1</span>
+            </div>
+            <h3 class="project-title">Quantum Mechanics Calculator</h3>
+            <p class="project-desc">Interactive web computational engine for quantum mechanics — solves 1D/3D Schrödinger wave equations, computes wave packet dispersion, and renders probability density distributions with real-time parameter scrubbing.</p>
+            <div class="project-tags">
+              <span class="tag">Quantum Physics</span>
+              <span class="tag">Schrödinger Solver</span>
+              <span class="tag">JavaScript</span>
+              <span class="tag">Simulation</span>
+              <span class="tag">Vercel</span>
+            </div>
+            <div class="project-actions-grid">
+              <a href="https://quantum-mechanics-calculator.vercel.app" target="_blank" rel="noopener noreferrer" class="btn-action-site" title="Visit Live Quantum Calculator Website">
+                <i data-lucide="external-link"></i> Live Website
+              </a>
+              <a href="https://github.com/LuxShar007/QuantumMechanicsCalculator" target="_blank" rel="noopener noreferrer" class="btn-action-gh" title="View QuantumMechanicsCalculator GitHub Repository">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+                GitHub Repo
+              </a>
+            </div>
+          </div>
+        </article>
 
       </div>
 
       <!-- Sequential Page Flow Navigator -->
-      <div class="page-flow-nav" id="page-flow-nav">
+      <div class="page-flow-nav" id="page-flow-nav" style="margin-top: 60px;">
         <a href="milestones.html" class="flow-btn prev" title="Previous: Milestones">
           <span style="color: var(--accent-cyan); font-size: 1.1rem;">←</span>
           <div>
@@ -453,6 +865,7 @@
           <span style="color: var(--accent-cyan); font-size: 1.1rem;">→</span>
         </a>
       </div>
+
     </section>
   </main>
 
@@ -471,5 +884,22 @@
   <script src="ultra-nav.js?v=11"></script>
   <script src="water-audio-particles.js?v=11"></script>
   <script src="app_v3.js?v=11"></script>
+  <script>
+    // Project Category Filtering
+    document.querySelectorAll('.filter-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.getAttribute('data-filter');
+        document.querySelectorAll('.project-card').forEach(card => {
+          if (filter === 'all' || card.getAttribute('data-category') === filter) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>
