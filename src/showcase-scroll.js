@@ -51,7 +51,25 @@
       revealObserver.observe(card);
     });
 
-    // 3. Ensure all videos loop and play seamlessly
+    // 3. Homepage user-interaction audio trigger (Slushii 0:45 - 1:45)
+    let hasEngagedAudio = false;
+    const onFirstUserScroll = () => {
+      if (!hasEngagedAudio) {
+        hasEngagedAudio = true;
+        if (window.UltraAudio && !window.UltraAudio.isPlaying && !window.UltraAudio.userManuallyPaused) {
+          window.UltraAudio.playSegment();
+        }
+      }
+      window.removeEventListener('scroll', onFirstUserScroll);
+      window.removeEventListener('wheel', onFirstUserScroll);
+      window.removeEventListener('touchmove', onFirstUserScroll);
+    };
+
+    window.addEventListener('scroll', onFirstUserScroll, { passive: true });
+    window.addEventListener('wheel', onFirstUserScroll, { passive: true });
+    window.addEventListener('touchmove', onFirstUserScroll, { passive: true });
+
+    // 4. Ensure all videos loop and play seamlessly
     videos.forEach((vid) => {
       vid.play().catch(() => {
         vid.muted = true;

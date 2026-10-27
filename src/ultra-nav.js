@@ -23,6 +23,273 @@
   document.documentElement.setAttribute('data-theme', 'dark');
   localStorage.removeItem('axiom_theme');
 
+  // Helper: Check if active page is homepage
+  function isHomepage() {
+    const pathname = window.location.pathname;
+    let page = pathname.substring(pathname.lastIndexOf('/') + 1) || 'index.html';
+    if (!page.includes('.')) page += '.html';
+    return page === '' || page === 'index.html';
+  }
+
+  // 3. Homepage-Exclusive Audio Manager for Slushii - "All I Need" [0:45 - 1:45]
+  class UltraAudioEngine {
+    constructor() {
+      this.audio = null;
+      this.ctx = null;
+      this.analyser = null;
+      this.source = null;
+      this.dataArray = null;
+      this.isPlaying = false;
+      this.userManuallyPaused = false;
+      this.startTime = 45.0; // 0:45 seconds timestamp
+      this.endTime = 105.0;  // 1:45 seconds timestamp (1m 45s = 105s)
+      this.listeners = [];
+      this.rafLoop = null;
+
+      const basePath = window.location.pathname.startsWith('/portfolio') ? '/portfolio' : '';
+      this.candidates = [
+        basePath + '/assets/media/audio/All%20I%20Need%20-%20Slushii.mp3',
+        'assets/media/audio/All%20I%20Need%20-%20Slushii.mp3',
+        '../assets/media/audio/All%20I%20Need%20-%20Slushii.mp3'
+      ];
+      this.candidateIdx = 0;
+      
+      this.initAudioElement();
+    }
+
+    initAudioElement() {
+      this.audio = new Audio();
+      this.audio.preload = 'auto';
+      this.audio.loop = false; // We manage precise looping between 45.0s and 105.0s
+      this.audio.src = this.candidates[0];
+
+      this.audio.addEventListener('error', () => {
+        if (this.candidateIdx < this.candidates.length - 1) {
+          this.candidateIdx++;
+          this.audio.src = this.candidates[this.candidateIdx];
+        }
+      });
+
+      this.audio.addEventListener('play', () => {
+        this.isPlaying = true;
+        this.notify();
+      });
+
+      this.audio.addEventListener('pause', () => {
+        this.isPlaying = false;
+        this.notify();
+      });
+
+      this.audio.addEventListener('timeupdate', () => {
+        if (this.audio.currentTime >= this.endTime) {
+          this.audio.currentTime = this.startTime;
+          if (this.isPlaying) {
+            this.audio.play().catch(() => {});
+          }
+        }
+      });
+
+      this.audio.addEventListener('ended', () => {
+        this.audio.currentTime = this.startTime;
+        if (this.isPlaying) {
+          this.audio.play().catch(() => {});
+        }
+      });
+    }
+
+    setupWebAudio() {
+      if (this.ctx) return;
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        this.ctx = new AudioContext();
+        this.analyser = this.ctx.createAnalyser();
+        this.analyser.fftSize = 256;
+        this.analyser.smoothingTimeConstant = 0.15; // Rapid transient kick punch for beat detection
+        this.source = this.ctx.createMediaElementSource(this.audio);
+        this.source.connect(this.analyser);
+        this.analyser.connect(this.ctx.destination);
+        this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+      } catch (e) {
+        // Fallback if already connected or context restricted
+      }
+    }
+
+    async playSegment() {
+      if (!isHomepage()) return; // Homepage only
+      try {
+        this.setupWebAudio();
+        if (this.ctx && this.ctx.state === 'suspended') {
+          await this.ctx.resume();
+        }
+        
+        // Ensure playback starts within segment 0:45 to 1:45
+        if (this.audio.currentTime < this.startTime || this.audio.currentTime >= this.endTime) {
+          this.audio.currentTime = this.startTime;
+        }
+
+        // Cinematic smooth sound fade-in over 600ms
+        this.audio.volume = 0;
+        await this.audio.play();
+        this.isPlaying = true;
+        this.userManuallyPaused = false;
+        this.notify();
+
+        // High-precision frame-accurate loop guard for exact 1:45 (105s) wrap-around
+        if (this.rafLoop) cancelAnimationFrame(this.rafLoop);
+        const checkLoop = () => {
+          if (!this.isPlaying) return;
+          if (this.audio.currentTime >= this.endTime) {
+            this.audio.currentTime = this.startTime;
+          }
+          this.rafLoop = requestAnimationFrame(checkLoop);
+        };
+        this.rafLoop = requestAnimationFrame(checkLoop);
+
+        const fadeDuration = 600; // ms
+        const startFade = performance.now();
+        const targetVol = 0.85;
+
+        const rampIn = (now) => {
+          const progress = Math.min(1, (now - startFade) / fadeDuration);
+          this.audio.volume = progress * targetVol;
+          if (progress < 1 && this.isPlaying) {
+            requestAnimationFrame(rampIn);
+          }
+        };
+        requestAnimationFrame(rampIn);
+      } catch (err) {
+        console.warn('Audio waiting for user gesture or autoplay policy:', err);
+      }
+    }
+
+    // Aliases
+    playFrom45s() { return this.playSegment(); }
+    playFrom40s() { return this.playSegment(); }
+    play() { return this.playSegment(); }
+
+    pause() {
+      if (this.audio && this.isPlaying) {
+        const fadeDuration = 250;
+        const initialVol = this.audio.volume;
+        const startFade = performance.now();
+
+        const rampOut = (now) => {
+          const progress = Math.min(1, (now - startFade) / fadeDuration);
+          this.audio.volume = Math.max(0, initialVol * (1 - progress));
+          if (progress < 1) {
+            requestAnimationFrame(rampOut);
+          } else {
+            this.audio.pause();
+            this.isPlaying = false;
+            this.notify();
+          }
+        };
+        requestAnimationFrame(rampOut);
+      }
+    }
+
+    toggle() {
+      if (this.isPlaying) {
+        this.userManuallyPaused = true;
+        this.pause();
+      } else {
+        this.userManuallyPaused = false;
+        this.playSegment();
+      }
+    }
+
+    getBassLevel() {
+      if (!this.analyser || !this.dataArray || !this.isPlaying) return 0;
+      this.analyser.getByteFrequencyData(this.dataArray);
+      let sum = 0;
+      for (let i = 0; i < 4; i++) {
+        sum += this.dataArray[i];
+      }
+      return sum / (4 * 255);
+    }
+
+    subscribe(fn) {
+      this.listeners.push(fn);
+    }
+
+    notify() {
+      this.listeners.forEach(fn => fn(this.isPlaying));
+    }
+  }
+
+  // Expose singleton on window
+  window.UltraAudio = window.UltraAudio || new UltraAudioEngine();
+
+  // Floating Bottom-Right Audio Pill (Homepage exclusive)
+  function buildAudioToggle() {
+    if (!isHomepage()) return;
+    let btn = document.getElementById('floating-audio-pill');
+    if (btn) {
+      btn.style.display = 'flex';
+      btn.classList.remove('hidden-page');
+      return;
+    }
+
+    btn = document.createElement('button');
+    btn.id = 'floating-audio-pill';
+    btn.className = 'floating-audio-pill';
+    btn.title = "Play / Pause Slushii - All I Need (0:45 - 1:45)";
+    btn.setAttribute('aria-label', 'Toggle Slushii - All I Need music (0:45 - 1:45)');
+    btn.innerHTML = `
+      <div class="ultra-eq-bars" aria-hidden="true">
+        <span class="ultra-eq-bar"></span>
+        <span class="ultra-eq-bar"></span>
+        <span class="ultra-eq-bar"></span>
+        <span class="ultra-eq-bar"></span>
+      </div>
+      <div class="ultra-music-tag">
+        <span class="ultra-music-title">SLUSHII</span>
+        <span class="ultra-music-dot">•</span>
+        <span class="ultra-music-track">ALL I NEED</span>
+        <span class="ultra-music-range">0:45 - 1:45</span>
+      </div>
+    `;
+
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      window.UltraAudio.toggle();
+    });
+
+    window.UltraAudio.subscribe((isPlaying) => {
+      if (isPlaying) {
+        btn.classList.add('is-playing');
+      } else {
+        btn.classList.remove('is-playing');
+      }
+    });
+
+    document.body.appendChild(btn);
+  }
+
+  // Synchronize audio and floating pill visibility with current page
+  function syncAudioForCurrentPage() {
+    const onHome = isHomepage();
+    const pill = document.getElementById('floating-audio-pill');
+    if (onHome) {
+      if (!pill) {
+        buildAudioToggle();
+      } else {
+        pill.style.display = 'flex';
+        pill.classList.remove('hidden-page');
+      }
+    } else {
+      // Not on homepage: immediately pause music and hide pill
+      if (window.UltraAudio && window.UltraAudio.isPlaying) {
+        window.UltraAudio.pause();
+      }
+      if (pill) {
+        pill.style.display = 'none';
+        pill.classList.add('hidden-page');
+      }
+    }
+  }
+
   // 4. Sequential Previous / Next Page Flow Navigator on Inner Pages
   function buildPageFlowNav() {
     const pathname = window.location.pathname;
@@ -208,6 +475,18 @@
       return;
     }
 
+    // Homepage-exclusive audio: if leaving homepage, immediately pause music & hide pill
+    if (targetPath !== 'index.html') {
+      if (window.UltraAudio && window.UltraAudio.isPlaying) {
+        window.UltraAudio.pause();
+      }
+      const pill = document.getElementById('floating-audio-pill');
+      if (pill) {
+        pill.style.display = 'none';
+        pill.classList.add('hidden-page');
+      }
+    }
+
     isTransitioning = true;
     let cached = pageCache.get(targetPath);
     if (!cached) {
@@ -281,6 +560,7 @@
 
       // Re-run page initializers
       buildPageFlowNav();
+      syncAudioForCurrentPage();
       if (window.lucide && typeof window.lucide.createIcons === 'function') {
         window.lucide.createIcons();
       }
@@ -343,6 +623,7 @@
   window.addEventListener('popstate', () => {
     const path = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1) || 'index.html';
     instantNavigate(path, false);
+    syncAudioForCurrentPage();
   });
 
   window.instantNavigate = instantNavigate;
@@ -350,6 +631,7 @@
   // Initialize on DOM ready
   function initNav() {
     buildPageFlowNav();
+    syncAudioForCurrentPage();
     bindLinkInterceptors(document);
     prefetchAllPages();
   }
