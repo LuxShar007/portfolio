@@ -238,6 +238,17 @@
     setTimeout(() => {
       // Swap content and document metadata
       document.title = newDoc.title || 'Sharvin Mhatre';
+
+      // Transfer any page-specific <style> or <link rel="stylesheet"> from newDoc to document.head
+      const newHeadStyles = Array.from(newDoc.querySelectorAll('head style, head link[rel="stylesheet"]'));
+      newHeadStyles.forEach(elem => {
+        if (elem.id && document.getElementById(elem.id)) return;
+        if (elem.tagName.toLowerCase() === 'link') {
+          const href = elem.getAttribute('href');
+          if (href && document.querySelector(`link[href="${href}"]`)) return;
+        }
+        document.head.appendChild(elem.cloneNode(true));
+      });
       currentMain.innerHTML = newMain.innerHTML;
       currentMain.className = newMain.className;
       if (newMain.getAttribute('style')) {

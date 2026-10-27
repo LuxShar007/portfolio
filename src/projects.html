@@ -15,10 +15,10 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="alternate icon" href="/favicon.ico">
 
-  <link rel="stylesheet" href="styles.css?v=12">
+  <link rel="stylesheet" href="styles.css?v=14">
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <style>
+  <style id="projects-page-styles">
     /* ╔══════════════════════════════════════════════╗
        ║  VERCEL-STYLE DEPLOYMENT PROJECT CARDS       ║
        ╚══════════════════════════════════════════════╝ */
@@ -446,6 +446,13 @@
 
   <!-- ═══ MAIN ══════════════════════════════════════════════════ -->
   <main class="content-wrapper" style="padding-top: 40px; min-height: 100vh;">
+  <!-- Zero-jump layout containment styles for instant SPA hydration -->
+  <style>
+    .projects-grid { display: grid; width: 100%; }
+    .project-card { display: flex; flex-direction: column; min-width: 0; max-width: 100%; overflow: hidden; }
+    .vercel-preview-frame { position: relative; width: 100%; aspect-ratio: 16/9.5; overflow: hidden; display: block; }
+    .vercel-preview-img { width: 100%; height: 100%; max-width: 100%; object-fit: cover; display: block; }
+  </style>
     <section class="section-container" style="padding-bottom: 80px;">
 
       <!-- Header Section -->
@@ -881,7 +888,7 @@
     </div>
   </footer>
 
-  <script src="ultra-nav.js?v=11"></script>
+  <script src="ultra-nav.js?v=14"></script>
   <script src="water-audio-particles.js?v=11"></script>
   <script src="app_v3.js?v=11"></script>
   <script>
